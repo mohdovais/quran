@@ -1,0 +1,31 @@
+{
+  "name": "learnpreact",
+  "version": "1.0.0",
+  "description": "Tring to setup preact :(",
+  "main": "index.js",
+  "scripts": {
+    "test": "why test"
+  },
+  "author": "Mohd Ovais",
+  "license": "ISC",
+  "dependencies": {
+    "preact": "^8.2.5",
+    "promise-polyfill": "6.0.2",
+    "redux": "^3.7.2",
+    "whatwg-fetch": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-node-globals": "^1.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-postcss": "^0.5.5",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
+  }
+}
