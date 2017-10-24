@@ -1,82 +1,47 @@
-// Copyright 2016 Google Inc.
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//      http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-var cacheName = 'cache-quran';
-var filesToCache = [
+var CACHE_NAME = 'cache-quran-v1';
+var urlsToCache = [
+  '/~ovais/quran/',
   'index.html',
   'assets/scripts/app.js',
-  'assets/styles/style.css',
   'assets/data/quran-data.xml',
-  'assets/data/quran-simple.xml',
-  'assets/images/ayah.svg',
-  'assets/images/ruku.svg'
+  'assets/data/quran-simple.xml'
 ];
 
-self.addEventListener('install', function(e) {
-  console.log('[ServiceWorker] Install');
-  e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      console.log('[ServiceWorker] Caching app shell');
-      return cache.addAll(filesToCache);
+// INSTALL
+self.addEventListener('install', function (event) {
+  event.waitUntil(
+    caches
+    .open(CACHE_NAME)
+    .then(function (cache) {
+      return cache.addAll(urlsToCache);
     })
   );
 });
 
-self.addEventListener('activate', function(e) {
-  console.log('[ServiceWorker] Activate');
-  e.waitUntil(
-    caches.keys().then(function(keyList) {
-      return Promise.all(keyList.map(function(key) {
-        if (key !== cacheName && key !== dataCacheName) {
-          console.log('[ServiceWorker] Removing old cache', key);
-          return caches.delete(key);
-        }
-      }));
+// ACTIVATE
+self.addEventListener('activate', function (event) {
+  event.waitUntil(
+    caches.keys().then(function (cacheNames) {
+      return Promise.all(
+        cacheNames.map(function (cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
     })
   );
-  /*
-   * Fixes a corner case in which the app wasn't returning the latest data.
-   * You can reproduce the corner case by commenting out the line below and
-   * then doing the following steps: 1) load app for first time so that the
-   * initial New York City data is shown 2) press the refresh button on the
-   * app 3) go offline 4) reload the app. You expect to see the newer NYC
-   * data, but you actually see the initial data. This happens because the
-   * service worker is not yet activated. The code below essentially lets
-   * you activate the service worker faster.
-   */
   return self.clients.claim();
 });
 
-self.addEventListener('fetch', function(evt) {
-  console.log('The service worker is serving the asset.');
-  evt.respondWith(fromCache(evt.request));
-  evt.waitUntil(update(evt.request));
-
+// FETCH
+self.addEventListener('fetch', function(event) {
+  console.log(event)
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        return response || fetch(event.request);
+      }
+    )
+  );
 });
-
-function fromCache(request) {
-  return caches.open(cacheName).then(function (cache) {
-    return cache.match(request).then(function (matching) {
-      return matching || fetch(request);
-    });
-  });
-}
-
-function update(request) {
-  return caches.open(CACHE).then(function (cache) {
-    return fetch(request).then(function (response) {
-      return cache.put(request, response);
-    });
-  });
-}

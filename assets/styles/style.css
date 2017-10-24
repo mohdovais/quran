@@ -16,7 +16,7 @@ article {
 
 article header {
     text-align: center;
-    padding: 0 0 1em 0;
+    /*padding: 0 0 1em 0;*/
 }
 
 article header * {
@@ -40,6 +40,7 @@ article header h3 {
     font-weight: 300;
 }
 
+/*
 article header h4{
     font-size: 0.7em;
     padding-top: 1em;
@@ -48,6 +49,12 @@ article header h4{
 article h4 img{
     width: 240px;
     max-width: 100%;
+}
+*/
+.bismillah{
+    width: 240px;
+    max-width: 100%;
+    margin-top: 1em;
 }
 
 .verse {
@@ -64,6 +71,12 @@ article h4 img{
     font-size: 0.5em;
     margin: 0 1em;
     vertical-align: top;
+}
+
+.aya-count{
+    width: 1.5em;
+    vertical-align: middle;
+    margin: 0 0.5em;
 }
 
 .ayaNumber.ruku {

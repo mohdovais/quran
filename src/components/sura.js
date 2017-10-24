@@ -4,7 +4,8 @@ import {
 } from 'preact';
 
 import Aya from './aya';
-import {SURA_AR} from '../constants'
+import {SURA_AR, BISMILLAH_AR} from '../constants';
+import SvgBismillah from './svg-bismillah';
 
 export default class Sura extends Component{
 
@@ -55,7 +56,7 @@ export default class Sura extends Component{
         }
 
         if(firstAya.bismillah || firstAya.sura === 1){
-            h4 = (<h4><img src="assets/images/bismillah.svg" alt={firstAya.bismillah} /></h4>);
+            h4 = <SvgBismillah fill='#19435C' desc={BISMILLAH_AR} className='bismillah' />
         }
 
         return (<header>{h2}{h3}{h4}</header>)

@@ -1,10 +1,23 @@
-import {h, render} from 'preact';
-import {createStore} from 'redux';
+import {
+    h,
+    render
+} from 'preact';
+import {
+    createStore
+} from 'redux';
 import fetchXML from './utils/fetchXML';
-import {flattenSura, mergeMeta} from './utils/utils';
+import {
+    flattenSura,
+    mergeMeta
+} from './utils/utils';
 import reducer from './reducer';
 import App from './components/app';
-import {ACTION_LOAD, ACTION_GOTO_INDEX, TYPE_SURA, TYPE_PAGE} from './constants';
+import {
+    ACTION_LOAD,
+    ACTION_GOTO_INDEX,
+    TYPE_SURA,
+    TYPE_PAGE
+} from './constants';
 import '../assets/styles/style.css';
 import Promise from 'promise-polyfill';
 import 'whatwg-fetch';
@@ -22,11 +35,11 @@ const loader = document.querySelector('.loader');
  * ******************************************* */
 
 const router = new Router({
-    '(sura|page)\/(\\d+)': function(type, _index){
+    '(sura|page)\/(\\d+)': function (type, _index) {
         const index = parseInt(_index, 10);
-        if(index && index > 0){
+        if (index && index > 0) {
             let state = state = store.getState();
-            if(!(state.index === index && state.type === type)){
+            if (!(state.index === index && state.type === type)) {
                 store.dispatch({
                     type: ACTION_GOTO_INDEX,
                     data: {
@@ -35,16 +48,16 @@ const router = new Router({
                     }
                 });
             }
-        }else{
+        } else {
             this.redirectTo(`${type}/1`);
         }
     },
-    'sura\/(\\d+)\/aya\/(\\d+)': function(sura, aya){
+    'sura\/(\\d+)\/aya\/(\\d+)': function (sura, aya) {
         console.log('callback', sura, aya, this)
     }
 }).execute();
 
-store.subscribe(function(){
+store.subscribe(function () {
     const state = store.getState();
     router.redirectTo(`${state.type}/${state.index}`)
 });
@@ -54,21 +67,23 @@ store.subscribe(function(){
  * ******************************************* */
 
 
-const app = render(<App store = {store} />, document.body, document.getElementById('app'));
+const app = render(h(App, {
+    store: store
+}), document.body, document.getElementById('app'));
 
-function _loaded() {
+function hidePreloader() {
     app.removeAttribute('hidden');
     loader.setAttribute('hidden', true);
 }
 
-function init(){
+function init() {
     Promise.all([
         fetchXML('assets/data/quran-simple.xml'),
         fetchXML('assets/data/quran-data.xml')
     ]).then(function (responses) {
         const verse = flattenSura(responses[0].quran.sura);
         const meta = responses[1].quran;
-    
+
         store.dispatch({
             type: ACTION_LOAD,
             data: {
@@ -76,9 +91,9 @@ function init(){
                 meta
             }
         });
-    
-        _loaded();
-    
+
+        hidePreloader();
+
     }, function (e) {
         console.log(e)
     });
@@ -87,35 +102,36 @@ function init(){
 init();
 
 /*
-if ('serviceWorker' in navigator && false) {
-    navigator.serviceWorker
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        "use strict"
+        navigator.serviceWorker
         .getRegistration()
-        .then(function(registration) {
+        .then(function (registration) {
             if (registration && registration.active) {
-                
+                //registration.unregister()
             }
 
-            if(!registration || !navigator.serviceWorker.controller){
+            if (!registration || !navigator.serviceWorker.controller) {
                 navigator.serviceWorker
-                .register('service-worker.js')
-                .then(function () {
-                    console.log('Service Worker Registered');
-                    window.location.reload();
-                });
-            }else{
-                console.log('Service Worker Active');
+                    .register('service-worker.js')
+                    .then(function () {
+                        window.location.reload();
+                    });
+            } else {
                 init();
             }
         });
-    
-    
-}else{
+    });
+} else {
     init();
 }
+
 */
 
 // attach Google fonts css
-(function(document, nodeType, existingNode, node){
+(function (document, nodeType, existingNode, node) {
     existingNode = document.getElementsByTagName(nodeType)[0];
     node = document.createElement(nodeType);
     node.rel = 'stylesheet';

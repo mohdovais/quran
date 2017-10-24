@@ -4,3 +4,4 @@ export const ACTION_LOAD = 'LOAD';
 export const ACTION_GOTO_INDEX = 'GOTO_INDEX';
 
 export const SURA_AR = 'سورة‎‎';
+export const BISMILLAH_AR = 'سورة‎‎ البقرة';

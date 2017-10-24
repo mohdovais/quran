@@ -3,18 +3,27 @@ import {
     Component
 } from 'preact';
 import {toArabicNumber} from '../utils/utils';
+import SvgAya from './svg-aya';
+
+/**
+ * Ruku
+ * outline: '#19435c'
+ * Inner: '#d2d9f5'
+ * bgColor: '#a1c8e5';
+ */
 
 export default class Aya extends Component {
     render(){
         const aya = this.props.attr;
         const verseClass = 'verse' + (aya.sajda ? ' sajda' : '');
-        const countClass = 'ayaNumber' + (aya.ruku ? ' ruku' : '');
         const id = `s${aya.sura}-a${aya.index}`;
-        const title = aya.ruku ? `Ruku ${aya.ruku}`: '';
+        const bgColor = aya.ruku  ? '#d2d9f5' : null;
         return (
             <span class={verseClass} id={id}>
                 {aya.text}
-                <span class={countClass} title={title}>{toArabicNumber(aya.index)}</span>
+                <SvgAya className='aya-count' bgColor={bgColor}>
+                    {toArabicNumber(aya.index)}
+                </SvgAya>
             </span>
         )
     }
