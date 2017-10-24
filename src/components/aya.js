@@ -5,23 +5,29 @@ import {
 import {toArabicNumber} from '../utils/utils';
 import SvgAya from './svg-aya';
 
-/**
- * Ruku
- * outline: '#19435c'
- * Inner: '#d2d9f5'
- * bgColor: '#a1c8e5';
- */
 
 export default class Aya extends Component {
     render(){
+        let bgColor, fillColor, strokeColor;
         const aya = this.props.attr;
         const verseClass = 'verse' + (aya.sajda ? ' sajda' : '');
         const id = `s${aya.sura}-a${aya.index}`;
-        const bgColor = aya.ruku  ? '#d2d9f5' : null;
+        const desc = `End of Aya ${aya.index} of Sura ${aya.sura}`;
+        if(aya.ruku){
+            bgColor = '#d2d9f5';
+            fillColor = '#a1c8e5';
+            strokeColor = '#19435c';
+        }
         return (
             <span class={verseClass} id={id}>
                 {aya.text}
-                <SvgAya className='aya-count' bgColor={bgColor}>
+                <SvgAya 
+                    desc={desc} 
+                    className='aya-count' 
+                    strokeColor={strokeColor} 
+                    bgColor={bgColor} 
+                    fillColor={fillColor}
+                >
                     {toArabicNumber(aya.index)}
                 </SvgAya>
             </span>
