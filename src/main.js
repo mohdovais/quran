@@ -1,3 +1,5 @@
+import Promise from 'promise-polyfill';
+import 'whatwg-fetch';
 import {
     h,
     render
@@ -19,8 +21,6 @@ import {
     TYPE_PAGE
 } from './constants';
 import '../assets/styles/style.css';
-import Promise from 'promise-polyfill';
-import 'whatwg-fetch';
 import Router from './router';
 
 if (!window.Promise) {

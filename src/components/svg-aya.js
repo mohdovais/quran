@@ -8,8 +8,8 @@ export default class SvgAya extends Component{
         const bgColor = props.bgColor || '#f5eed2';
 
         return (
-            <svg viewBox="0 0 1250 1625" role="img" aria-labelledby="desc" class={props.className}>
-            <desc>{props.desc}</desc>
+            <svg viewBox="0 0 1250 1625" role="img" aria-labelledby="title desc" class={props.className}>
+            <title>{props.desc}</title>
             <g stroke={strokeColor} stroke-width="30">
               <circle r="605" cx="633" cy="822" fill={fillColor}/>
               <circle r="510" cx="633" cy="822" fill={bgColor} />
