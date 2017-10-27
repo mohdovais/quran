@@ -53,6 +53,7 @@ article h4 img{
 */
 .bismillah{
     width: 240px;
+    height: 55px;
     max-width: 100%;
     margin-top: 1em;
 }
@@ -75,6 +76,7 @@ article h4 img{
 
 .aya-count{
     width: 1.5em;
+    height: 1.5em;
     vertical-align: middle;
     margin: 0 0.5em;
 }

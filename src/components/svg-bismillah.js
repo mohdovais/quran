@@ -2,16 +2,13 @@ import {h, Component} from 'preact';
 
 export default class Bismillah extends Component{
     render(){
-        const hundredPercent = '100%';
-        const viewBox = '0 0 570.4 128.4';
         return (
             <svg 
-                width={hundredPercent} 
-                height={hundredPercent} 
-                viewBox={viewBox}
+                viewBox="0 0 570.4 128.4"
                 role="img" 
-                aria-labelledby="desc"
+                aria-labelledby="title desc"
                 className={this.props.className}>
+                <title>In the name of Allah, the most beneficial, the most merciful</title>
                 <desc>{this.props.desc}</desc>
                 <path 
                     fill={this.props.fill} 
