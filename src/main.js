@@ -1,28 +1,21 @@
+import '../assets/styles/style.css';
 import './polyfills/object-assign';
 import Promise from 'promise-polyfill';
 import 'whatwg-fetch';
-import {
-    h,
-    render
-} from 'preact';
-import {
-    createStore
-} from 'redux';
-import fetchXML from './utils/fetchXML';
-import {
-    flattenSura,
-    mergeMeta
-} from './utils/utils';
+import {h, render} from 'preact';
+import {createStore} from 'redux';
+import fetchXml2Json from './utils/fetch-xml-json';
+import flattenSura from './utils/flatten-sura';
+import mergeMeta from './utils/merge-sura-meta';
 import reducer from './reducer';
 import App from './components/app';
+import Router from './router';
 import {
     ACTION_LOAD,
     ACTION_GOTO_INDEX,
     TYPE_SURA,
     TYPE_PAGE
 } from './constants';
-import '../assets/styles/style.css';
-import Router from './router';
 
 if (!window.Promise) {
     window.Promise = Promise;
@@ -79,8 +72,8 @@ function hidePreloader() {
 
 function init() {
     Promise.all([
-        fetchXML('assets/data/quran-simple.xml'),
-        fetchXML('assets/data/quran-data.xml')
+        fetchXml2Json('assets/data/quran-simple.xml'),
+        fetchXml2Json('assets/data/quran-data.xml')
     ]).then(function (responses) {
         const verse = flattenSura(responses[0].quran.sura);
         const meta = responses[1].quran;

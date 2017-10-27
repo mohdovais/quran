@@ -19,6 +19,8 @@ function __$styleInject(css, returnValue) {
   return returnValue;
 }
 
+__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n}\n\narticle header {\n    text-align: center;\n    /*padding: 0 0 1em 0;*/\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em; \n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n/*\narticle header h4{\n    font-size: 0.7em;\n    padding-top: 1em;\n}\n\narticle h4 img{\n    width: 240px;\n    max-width: 100%;\n}\n*/\n.bismillah{\n    width: 240px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.sajda {\n    color: red;\n}\n\n.ayaNumber {\n    background: url(assets/images/ayah.svg) 50% 50% no-repeat;\n    padding: 0.8em 1em;\n    font-size: 0.5em;\n    margin: 0 1em;\n    vertical-align: top;\n}\n\n.aya-count{\n    width: 1.5em;\n    vertical-align: middle;\n    margin: 0 0.5em;\n}\n\n.ayaNumber.ruku {\n    background: url(assets/images/ruku.svg) 50% 50% no-repeat;\n}\n\n\n\n\n\n\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}", undefined);
+
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
  */
@@ -868,7 +870,6 @@ function extend(obj, props) {
  */
 var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
 
-// DOM properties that should NOT have "px" added when numeric
 var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
 /** Managed queue of dirty components to be re-rendered */
@@ -1711,6 +1712,9 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
+
+//# sourceMappingURL=preact.esm.js.map
+
 var global$1 = typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :
             typeof window !== "undefined" ? window : {};
@@ -1747,22 +1751,17 @@ Item.prototype.run = function () {
 
 
 
-// generate timestamp or delta
-// see http://nodejs.org/api/process.html#process_process_hrtime
+// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
 
-/** Detect free variable `global` from Node.js. */
 var freeGlobal = typeof global$1 == 'object' && global$1 && global$1.Object === Object && global$1;
 
-/** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
 
 /** Used as a reference to the global object. */
 var root = freeGlobal || freeSelf || Function('return this')();
 
-/** Built-in value references. */
 var Symbol$1 = root.Symbol;
 
-/** Used for built-in method references. */
 var objectProto$1 = Object.prototype;
 
 /** Used to check objects for own properties. */
@@ -1826,7 +1825,6 @@ function objectToString(value) {
   return nativeObjectToString$1.call(value);
 }
 
-/** `Object#toString` result references. */
 var nullTag = '[object Null]';
 var undefinedTag = '[object Undefined]';
 
@@ -1863,7 +1861,6 @@ function overArg(func, transform) {
   };
 }
 
-/** Built-in value references. */
 var getPrototype = overArg(Object.getPrototypeOf, Object);
 
 /**
@@ -1894,7 +1891,6 @@ function isObjectLike(value) {
   return value != null && typeof value == 'object';
 }
 
-/** `Object#toString` result references. */
 var objectTag = '[object Object]';
 
 /** Used for built-in method references. */
@@ -2009,12 +2005,6 @@ exports['default'] = result;
 
 var symbolObservable = lib;
 
-/**
- * These are private action types reserved by Redux.
- * For any unknown actions, you must return the current state.
- * If the current state is undefined, you must return the initial state.
- * Do not reference these action types directly in your code.
- */
 var ActionTypes = {
   INIT: '@@redux/INIT'
 
@@ -2288,10 +2278,6 @@ function warning(message) {
  * (...args) => f(g(h(...args))).
  */
 
-/*
-* This is a dummy function to check if the function name has been altered by minification.
-* If the function has been minified and NODE_ENV !== 'production', warn the user.
-*/
 function isCrushed() {}
 
 if ("development" !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
@@ -2351,9 +2337,6 @@ function xml2json(xml) {
     return obj;
 }
 
-//import 'whatwg-fetch';
-
-
 function fetchXML(url) {
     return fetch(url).then(function (response) {
         if (!response.ok) {
@@ -2365,6 +2348,242 @@ function fetchXML(url) {
     }).then(function (xml) {
         return xml2json(xml);
     });
+}
+
+function flattenSura(suras) {
+    return suras.reduce(function (accumulator, sura) {
+        return accumulator.concat(sura.aya.map(function (obj) {
+            return Object.assign({
+                sura: parseInt(sura.index, 10)
+            }, obj, {
+                index: parseInt(obj.index)
+            });
+        }));
+    }, []);
+}
+
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+if (!Array.prototype.find) {
+    Object.defineProperty(Array.prototype, 'find', {
+        value: function value(predicate) {
+            // 1. Let O be ? ToObject(this value).
+            if (this == null) {
+                throw new TypeError('"this" is null or not defined');
+            }
+
+            var o = Object(this);
+
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            var len = o.length >>> 0;
+
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+            if (typeof predicate !== 'function') {
+                throw new TypeError('predicate must be a function');
+            }
+
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            var thisArg = arguments[1];
+
+            // 5. Let k be 0.
+            var k = 0;
+
+            // 6. Repeat, while k < len
+            while (k < len) {
+                // a. Let Pk be ! ToString(k).
+                // b. Let kValue be ? Get(O, Pk).
+                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                // d. If testResult is true, return kValue.
+                var kValue = o[k];
+                if (predicate.call(thisArg, kValue, k, o)) {
+                    return kValue;
+                }
+                // e. Increase k by 1.
+                k++;
+            }
+
+            // 7. Return undefined.
+            return undefined;
+        }
+    });
+}
+
+function mergeMeta(ayas, meta) {
+    var p = 1;
+    var r = 1;
+    return ayas.map(function (aya, index, array) {
+        var nextAya = array[index + 1];
+        var page = meta.pages.page[p];
+        var ruku = meta.rukus.ruku[r];
+        var isRuku = false;
+        var sajda = meta.sajdas.sajda.find(function (s) {
+            return s.sura == aya.sura && s.aya == aya.index;
+        });
+
+        if (page && aya.sura == page.sura && aya.index == page.aya) {
+            p++;
+        }
+
+        if (ruku && nextAya.sura == ruku.sura && nextAya.index == ruku.aya) {
+            isRuku = ruku.index;
+            r++;
+        }
+
+        return Object.assign(Object.create(null), {
+            page: p,
+            sajda: sajda && sajda.type || false,
+            ruku: isRuku
+        }, aya);
+    });
+}
+
+var TYPE_PAGE = 'page';
+var TYPE_SURA = 'sura';
+var ACTION_LOAD = 'LOAD';
+var ACTION_GOTO_INDEX = 'GOTO_INDEX';
+
+var SURA_AR = 'سورة‎‎';
+var BISMILLAH_AR = 'سورة‎‎ البقرة';
+
+function getPages(suraList) {
+    return suraList.map(function (page) {
+        return {
+            text: page.name + ' ' + page.tname,
+            value: page.index
+        };
+    });
+}
+
+function reducerSura(currentState, action) {
+    var index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
+    //if (action.type !== ACTION_LOAD && currentState.type === TYPE_SURA && currentState.index === index) {
+    //return currentState;
+    //} else {
+
+
+    var suraList = currentState.meta.suras.sura;
+    var newState = {
+        type: TYPE_SURA,
+        index: index,
+        verse: currentState.quran.filter(function (aya) {
+            return aya.sura === index;
+        })
+    };
+
+    //if (action.type === ACTION_LOAD || currentState.type !== TYPE_SURA) {
+    newState.maxPage = suraList.length;
+    newState.pages = getPages(suraList);
+    //}
+
+    return Object.assign({}, currentState, newState);
+    //}
+}
+
+function getPages$1(count) {
+    var pages = [];
+    for (var i = 1; i <= count; i++) {
+        pages.push({
+            text: i,
+            value: i
+        });
+    }
+    return pages;
+}
+
+function reducerPage(currentState, action) {
+    var index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
+    var count = currentState.meta.pages.page.length;
+
+    //if (currentState.index === index && currentState.type === TYPE_PAGE) {
+    // return currentState;
+    //} else {
+    var newState = {
+        type: TYPE_PAGE,
+        index: index,
+        verse: currentState.quran.filter(function (aya) {
+            return aya.page === index;
+        })
+
+        //if (action.type === ACTION_LOAD || currentState.type !== TYPE_PAGE) {
+    };var pages = getPages$1(count);
+    newState.pages = pages;
+    newState.maxPage = count;
+    //}
+
+    return Object.assign({}, currentState, newState);
+    //}
+}
+
+var initialState = {
+    type: TYPE_SURA,
+    types: [{
+        text: 'Sura',
+        value: TYPE_SURA
+    }, {
+        text: 'Page',
+        value: TYPE_PAGE
+    }],
+    index: 1,
+    verse: [],
+    pages: [],
+    maxPage: 0,
+    quran: [],
+    meta: {
+        pages: {
+            page: []
+        },
+        suras: {
+            sura: []
+        }
+    }
+};
+
+function applyState(state, data) {
+    return Object.assign({}, state, {
+        meta: data.meta || {},
+        quran: data.quran || []
+    });
+}
+
+function gotoIndex(state, action) {
+    var type = action.data && action.data.type || state.type;
+    switch (type) {
+        case TYPE_PAGE:
+            return reducerPage(state, action);
+        case TYPE_SURA:
+            return reducerSura(state, action);
+        default:
+            return state;
+    }
+}
+
+function reducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case 'LOAD':
+            state = applyState(state, action.data);
+            action = {
+                data: {
+                    index: state.index,
+                    type: state.type
+                }
+            };
+        case 'CHANGE_TYPE':
+        case 'GOTO_INDEX':
+            return gotoIndex(state, action);
+        default:
+            return state;
+    }
+}
+
+function gotoIndex$1(index) {
+    return {
+        type: 'GOTO_INDEX',
+        data: {
+            index: index
+        }
+    };
 }
 
 var asyncGenerator = function () {
@@ -2550,211 +2769,6 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
-// To do so, we use this function.
-
-
-
-
-
-
-////"٠١٢٣٤٥٦٧٨٩"
-function toArabicNumber(num) {
-    return String(num).split('').reduce(function (acc, n) {
-        return acc += '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669'.substr(parseInt(n), 1);
-    }, '');
-}
-
-function flattenSura(suras) {
-    return suras.reduce(function (acc, sura) {
-        return acc.concat(sura.aya.map(function (obj) {
-            return Object.assign({
-                sura: parseInt(sura.index, 10)
-            }, obj, {
-                index: parseInt(obj.index)
-            });
-        }));
-    }, []);
-}
-
-function mergeMeta(ayas, meta) {
-    var p = 1;
-    var r = 1;
-    return ayas.map(function (aya, index, array) {
-        var nextAya = array[index + 1];
-        var page = meta.pages.page[p];
-        var ruku = meta.rukus.ruku[r];
-        var isRuku = false;
-        var sajda = meta.sajdas.sajda.find(function (s) {
-            return s.sura == aya.sura && s.aya == aya.index;
-        });
-
-        if (page && aya.sura == page.sura && aya.index == page.aya) {
-            p++;
-        }
-
-        if (ruku && nextAya.sura == ruku.sura && nextAya.index == ruku.aya) {
-            isRuku = ruku.index;
-            r++;
-        }
-
-        return Object.assign(Object.create(null), {
-            page: p,
-            sajda: sajda && sajda.type || false,
-            ruku: isRuku
-        }, aya);
-    });
-}
-
-var TYPE_PAGE = 'page';
-var TYPE_SURA = 'sura';
-var ACTION_LOAD = 'LOAD';
-var ACTION_GOTO_INDEX = 'GOTO_INDEX';
-
-var SURA_AR = 'سورة‎‎';
-var BISMILLAH_AR = 'سورة‎‎ البقرة';
-
-function getPages(suraList) {
-    return suraList.map(function (page) {
-        return {
-            text: page.name + ' ' + page.tname,
-            value: page.index
-        };
-    });
-}
-
-function reducerSura(currentState, action) {
-    var index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
-    //if (action.type !== ACTION_LOAD && currentState.type === TYPE_SURA && currentState.index === index) {
-    //return currentState;
-    //} else {
-
-
-    var suraList = currentState.meta.suras.sura;
-    var newState = {
-        type: TYPE_SURA,
-        index: index,
-        verse: currentState.quran.filter(function (aya) {
-            return aya.sura === index;
-        })
-    };
-
-    //if (action.type === ACTION_LOAD || currentState.type !== TYPE_SURA) {
-    newState.maxPage = suraList.length;
-    newState.pages = getPages(suraList);
-    //}
-
-    return Object.assign({}, currentState, newState);
-    //}
-}
-
-function getPages$1(count) {
-    var pages = [];
-    for (var i = 1; i <= count; i++) {
-        pages.push({
-            text: i,
-            value: i
-        });
-    }
-    return pages;
-}
-
-function reducerPage(currentState, action) {
-    var index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
-    var count = currentState.meta.pages.page.length;
-
-    //if (currentState.index === index && currentState.type === TYPE_PAGE) {
-    // return currentState;
-    //} else {
-    var newState = {
-        type: TYPE_PAGE,
-        index: index,
-        verse: currentState.quran.filter(function (aya) {
-            return aya.page === index;
-        })
-
-        //if (action.type === ACTION_LOAD || currentState.type !== TYPE_PAGE) {
-    };var pages = getPages$1(count);
-    newState.pages = pages;
-    newState.maxPage = count;
-    //}
-
-    return Object.assign({}, currentState, newState);
-    //}
-}
-
-var initialState = {
-    type: TYPE_SURA,
-    types: [{
-        text: 'Sura',
-        value: TYPE_SURA
-    }, {
-        text: 'Page',
-        value: TYPE_PAGE
-    }],
-    index: 1,
-    verse: [],
-    pages: [],
-    maxPage: 0,
-    quran: [],
-    meta: {
-        pages: {
-            page: []
-        },
-        suras: {
-            sura: []
-        }
-    }
-};
-
-function applyState(state, data) {
-    return Object.assign({}, state, {
-        meta: data.meta || {},
-        quran: data.quran || []
-    });
-}
-
-function gotoIndex(state, action) {
-    var type = action.data && action.data.type || state.type;
-    switch (type) {
-        case TYPE_PAGE:
-            return reducerPage(state, action);
-        case TYPE_SURA:
-            return reducerSura(state, action);
-        default:
-            return state;
-    }
-}
-
-function reducer() {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
-    var action = arguments[1];
-
-    switch (action.type) {
-        case 'LOAD':
-            state = applyState(state, action.data);
-            action = {
-                data: {
-                    index: state.index,
-                    type: state.type
-                }
-            };
-        case 'CHANGE_TYPE':
-        case 'GOTO_INDEX':
-            return gotoIndex(state, action);
-        default:
-            return state;
-    }
-}
-
-function gotoIndex$1(index) {
-    return {
-        type: 'GOTO_INDEX',
-        data: {
-            index: index
-        }
-    };
-}
-
 var Filter = function (_Component) {
     inherits(Filter, _Component);
 
@@ -2924,6 +2938,13 @@ var Header = function (_Component) {
     }]);
     return Header;
 }(Component);
+
+////"٠١٢٣٤٥٦٧٨٩"
+function toArabicNumber(num) {
+    return String(num).split('').reduce(function (accumulator, digit) {
+        return accumulator += '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669'.substr(parseInt(digit), 1);
+    }, '');
+}
 
 var SvgAya = function (_Component) {
     inherits(SvgAya, _Component);
@@ -3310,8 +3331,6 @@ var App = function (_Component) {
     }]);
     return App;
 }(Component);
-
-__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n}\n\narticle header {\n    text-align: center;\n    /*padding: 0 0 1em 0;*/\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em; \n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n/*\narticle header h4{\n    font-size: 0.7em;\n    padding-top: 1em;\n}\n\narticle h4 img{\n    width: 240px;\n    max-width: 100%;\n}\n*/\n.bismillah{\n    width: 240px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.sajda {\n    color: red;\n}\n\n.ayaNumber {\n    background: url(assets/images/ayah.svg) 50% 50% no-repeat;\n    padding: 0.8em 1em;\n    font-size: 0.5em;\n    margin: 0 1em;\n    vertical-align: top;\n}\n\n.aya-count{\n    width: 1.5em;\n    vertical-align: middle;\n    margin: 0 0.5em;\n}\n\n.ayaNumber.ruku {\n    background: url(assets/images/ruku.svg) 50% 50% no-repeat;\n}\n\n\n\n\n\n\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}", undefined);
 
 var Router = function () {
     function Router(routes) {

@@ -2,7 +2,7 @@ import {
     h,
     Component
 } from 'preact';
-import {toArabicNumber} from '../utils/utils';
+import toArabicNumber from '../utils/arabic-number';
 import SvgAya from './svg-aya';
 
 
