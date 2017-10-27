@@ -19,7 +19,7 @@ function __$styleInject(css, returnValue) {
   return returnValue;
 }
 
-__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n}\n\narticle header {\n    text-align: center;\n    /*padding: 0 0 1em 0;*/\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em; \n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n/*\narticle header h4{\n    font-size: 0.7em;\n    padding-top: 1em;\n}\n\narticle h4 img{\n    width: 240px;\n    max-width: 100%;\n}\n*/\n.bismillah{\n    width: 240px;\n    height: 55px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.sajda {\n    color: red;\n}\n\n.ayaNumber {\n    background: url(assets/images/ayah.svg) 50% 50% no-repeat;\n    padding: 0.8em 1em;\n    font-size: 0.5em;\n    margin: 0 1em;\n    vertical-align: top;\n}\n\n.aya-count{\n    width: 1.5em;\n    height: 1.5em;\n    vertical-align: middle;\n    margin: 0 0.5em;\n}\n\n.ayaNumber.ruku {\n    background: url(assets/images/ruku.svg) 50% 50% no-repeat;\n}\n\n\n\n\n\n\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}", undefined);
+__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n}\n\narticle header {\n    text-align: center;\n    /*padding: 0 0 1em 0;*/\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em; \n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n.bismillah{\n    width: 240px;\n    height: 55px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.verse-count{\n    margin: 0 1em;\n    font-family: serif;\n}\n\n.verse-count span{\n    font-family: serif;\n}\n\n.verse-count svg{\n    height: 1.5em;\n    vertical-align: middle;\n}\n\n.verse-count svg text{\n    direction: ltr;\n    font-family: serif;\n    fill: red;\n}\n\n.sajda {\n    color: red;\n}\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}", undefined);
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -2984,13 +2984,86 @@ var SvgAya = function (_Component) {
                 h('path', { fill: strokeColor, d: 'M774.852 1369.398a15.002 15.002 0 0 1-4.367-29.16c74.866-27.215 111.261-45.649 161.848-81.652a15.002 15.002 0 1 1 17.394 24.441c-52.253 37.19-92.918 57.752-168.992 85.406a15.002 15.002 0 0 1-5.883.965zm-309.518 0a15.002 15.002 0 0 0 4.367-29.16c-74.866-27.215-111.261-45.649-161.848-81.652a15.002 15.002 0 1 0-17.394 24.441c52.254 37.19 92.918 57.752 168.992 85.406a15.002 15.002 0 0 0 5.883.965z' }),
                 h(
                     'text',
-                    { x: '620', y: '970', 'font-size': '500', 'text-anchor': 'middle' },
+                    { x: '620', y: '970', 'font-size': '700', 'text-anchor': 'middle' },
                     props.children[0]
                 )
             );
         }
     }]);
     return SvgAya;
+}(Component);
+
+var _class = function (_Component) {
+    inherits(_class, _Component);
+
+    function _class() {
+        classCallCheck(this, _class);
+        return possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+    }
+
+    createClass(_class, [{
+        key: "render",
+        value: function render$$1() {
+            var props = this.props;
+            return h(
+                "svg",
+                {
+                    viewBox: "0 0 1250 1625",
+                    role: "img",
+                    "aria-labelledby": "title",
+                    "class": props.className,
+                    width: props.width,
+                    height: props.height
+                },
+                h(
+                    "title",
+                    null,
+                    props.title
+                ),
+                h("path", { fill: "#19435c", d: "M1002.612 1402.795L752.454 1567.92q-205.664 0-318.384-16.81-194.788-28.673-300.586-114.696Q0 1328.638 0 1126.929q0-122.608 37.573-220.496 30.652-80.09 88-151.282 27.686-33.618 96.9-101.843-94.922-47.46-131.506-82.068-81.08-76.135-81.08-192.81 0-104.81 88.001-205.664Q198.743 57.08 342.114 57.08q64.27 0 136.45 37.573 48.45 24.72 121.62 82.068-96.9 0-198.744 12.854-131.506 16.81-212.585 48.45-98.877 38.562-98.877 94.922 0 60.315 113.709 114.697 95.91 45.483 217.529 64.27 98.877-53.393 192.81-90.967 104.81-41.528 217.53-69.214l-41.53 154.248q-205.663 80.09-296.63 122.608-183.911 87.012-281.8 177.978-125.573 116.675-125.573 250.16 0 139.416 104.81 219.506 90.966 69.214 267.956 97.888 140.405 22.742 357.935 22.742 46.472 0 92.944-.989l92.944-1.978v8.9z" }),
+                h(
+                    "text",
+                    { x: "500", y: "1200", "font-size": "700", "text-anchor": "middle" },
+                    props.children[0]
+                )
+            );
+        }
+    }]);
+    return _class;
+}(Component);
+
+var _class$1 = function (_Component) {
+    inherits(_class, _Component);
+
+    function _class() {
+        classCallCheck(this, _class);
+        return possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+    }
+
+    createClass(_class, [{
+        key: "render",
+        value: function render$$1() {
+            var props = this.props;
+            return h(
+                "svg",
+                {
+                    viewBox: "0 0 99 147",
+                    role: "img",
+                    "aria-labelledby": "title",
+                    "class": props.className,
+                    width: props.width,
+                    height: props.height
+                },
+                h(
+                    "title",
+                    null,
+                    props.title
+                ),
+                h("path", { d: "M99.229 147.305H0l20.04-22.94v-51.68L0 49.923 49.57 0 99.23 49.922l-20.04 22.764v51.68l20.04 22.939zm-6.856-97.383L49.57 6.855 6.855 49.922l18.457 20.83v55.547L11.25 142.383h76.729l-14.063-16.084V70.752l18.457-20.83zm-9.316 0l-13.184 15.03v70.839H29.355v-70.84l-13.183-15.03L49.57 16.437l33.487 33.486zm-6.416 0l-27.07-27.07-26.983 27.07 11.074 12.305v68.73h31.904v-68.73l11.075-12.305zm-7.823 0l-7.734 8.525v65.39h-22.94v-65.39l-7.734-8.525 19.16-19.6 19.248 19.6zm-4.658 0L49.57 34.98 35.068 49.922l6.504 7.119v63.105h15.996V57.041l6.592-7.12z" })
+            );
+        }
+    }]);
+    return _class;
 }(Component);
 
 var Aya = function (_Component) {
@@ -3004,32 +3077,54 @@ var Aya = function (_Component) {
     createClass(Aya, [{
         key: 'render',
         value: function render$$1() {
-            var bgColor = void 0,
+            var rukuSign = void 0,
+                sajdaSign = void 0,
+                bgColor = void 0,
                 fillColor = void 0,
                 strokeColor = void 0;
             var aya = this.props.attr;
-            var verseClass = 'verse' + (aya.sajda ? ' sajda' : '');
+            var verseClass = 'verse';
             var id = 's' + aya.sura + '-a' + aya.index;
             var desc = 'End of Aya ' + aya.index + ' of Sura ' + aya.sura;
             if (aya.ruku) {
                 bgColor = '#d2d9f5';
                 fillColor = '#a1c8e5';
                 strokeColor = '#19435c';
+                rukuSign = h(
+                    _class,
+                    { title: 'Ruku ' + aya.ruku },
+                    toArabicNumber(aya.ruku)
+                );
             }
+
+            if (aya.sajda) {
+                //sajdaSign = <span role="img" title={`${aya.sajda} sajda`}>{'\u06E9'}</span>
+                sajdaSign = h(_class$1, { title: aya.sajda + ' sajda' });
+            }
+
             return h(
                 'span',
-                { 'class': verseClass, id: id },
-                aya.text,
+                { 'class': verseClass + (aya.sajda ? ' sajda' : ''), id: id },
                 h(
-                    SvgAya,
-                    {
-                        desc: desc,
-                        className: 'aya-count',
-                        strokeColor: strokeColor,
-                        bgColor: bgColor,
-                        fillColor: fillColor
-                    },
-                    toArabicNumber(aya.index)
+                    'span',
+                    { 'class': verseClass + '-text' },
+                    aya.text
+                ),
+                h(
+                    'span',
+                    { 'class': verseClass + '-count' },
+                    sajdaSign,
+                    h(
+                        SvgAya,
+                        {
+                            desc: desc,
+                            strokeColor: strokeColor,
+                            bgColor: bgColor,
+                            fillColor: fillColor
+                        },
+                        toArabicNumber(aya.index)
+                    ),
+                    rukuSign
                 )
             );
         }

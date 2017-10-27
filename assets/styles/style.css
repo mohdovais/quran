@@ -40,17 +40,6 @@ article header h3 {
     font-weight: 300;
 }
 
-/*
-article header h4{
-    font-size: 0.7em;
-    padding-top: 1em;
-}
-
-article h4 img{
-    width: 240px;
-    max-width: 100%;
-}
-*/
 .bismillah{
     width: 240px;
     height: 55px;
@@ -62,34 +51,29 @@ article h4 img{
     border-bottom: 1px dotted #5c1712;
 }
 
+.verse-count{
+    margin: 0 1em;
+    font-family: serif;
+}
+
+.verse-count span{
+    font-family: serif;
+}
+
+.verse-count svg{
+    height: 1.5em;
+    vertical-align: middle;
+}
+
+.verse-count svg text{
+    direction: ltr;
+    font-family: serif;
+    fill: red;
+}
+
 .sajda {
     color: red;
 }
-
-.ayaNumber {
-    background: url(assets/images/ayah.svg) 50% 50% no-repeat;
-    padding: 0.8em 1em;
-    font-size: 0.5em;
-    margin: 0 1em;
-    vertical-align: top;
-}
-
-.aya-count{
-    width: 1.5em;
-    height: 1.5em;
-    vertical-align: middle;
-    margin: 0 0.5em;
-}
-
-.ayaNumber.ruku {
-    background: url(assets/images/ruku.svg) 50% 50% no-repeat;
-}
-
-
-
-
-
-
 
 
 footer {
