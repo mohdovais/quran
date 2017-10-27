@@ -71,7 +71,7 @@
     </div>
     <script>
         (function (d, s, m, n, b) {
-            min = d.location.search.match('debug') ? '' : '.min';
+            b = d.location.search.match('debug') ? '' : '.min';
             m = d.getElementsByTagName(s)[0];
             n = d.createElement(s);
             n.src = 'assets/scripts/app' + b + '.js';
