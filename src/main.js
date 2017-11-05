@@ -12,17 +12,15 @@ import App from './components/app';
 import Router from './router';
 import {
     ACTION_LOAD,
-    ACTION_GOTO_INDEX,
-    TYPE_SURA,
-    TYPE_PAGE
+    ACTION_GOTO_INDEX
 } from './constants';
 
 if (!window.Promise) {
     window.Promise = Promise;
 }
-
+const doc = document;
 const store = createStore(reducer);
-const loader = document.querySelector('.loader');
+const loader = doc.querySelector('.loader');
 
 /* *********************************************
  * Router Config Start
@@ -33,7 +31,12 @@ const router = new Router({
         const index = parseInt(_index, 10);
         if (index && index > 0) {
             let state = state = store.getState();
-            if (!(state.index === index && state.type === type)) {
+            if (
+                !(
+                    state.display.index === index
+                    && state.display.type === type
+                )
+            ) {
                 store.dispatch({
                     type: ACTION_GOTO_INDEX,
                     data: {
@@ -53,7 +56,8 @@ const router = new Router({
 
 store.subscribe(function () {
     const state = store.getState();
-    router.redirectTo(`${state.type}/${state.index}`)
+    const page = state.display;
+    router.redirectTo(`${page.type}/${page.index}`)
 });
 
 /* *********************************************
@@ -63,7 +67,7 @@ store.subscribe(function () {
 
 const app = render(h(App, {
     store: store
-}), document.body, document.getElementById('app'));
+}), doc.body, doc.getElementById('app'));
 
 function hidePreloader() {
     app.removeAttribute('hidden');
@@ -132,4 +136,4 @@ if ('serviceWorker' in navigator) {
     node.href = 'https://fonts.googleapis.com/css?family=Amiri';
     node.type = 'text/css';
     existingNode.parentNode.insertBefore(node, existingNode);
-}(document, 'link'));
+}(doc, 'link'));

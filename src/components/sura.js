@@ -11,13 +11,15 @@ export default class Sura extends Component{
 
     constructor() {
         super();
-        this.state.verse = [];
+        this.state.sura = {
+            ayas: []
+        };
     }
 
     componentDidMount(){
         const me = this;
         me.setState({
-            verse: []
+            ayas: []
         });
         window.requestAnimationFrame(me.stepState.bind(me));
     }
@@ -29,30 +31,29 @@ export default class Sura extends Component{
 
     render(props, state){
         const me = this;
+        const sura = props.data;
         return (
             <article lang="ar">
-                {me.getHeader(me.state.verse[0], me.props.meta)}
-                {me.getVerse(me.state.verse)}
+                {me.getHeader(sura)}
+                {me.getVerse(sura.ayas)}
             </article>
         )
     }
 
-    getHeader(firstAya, meta){
+    getHeader(sura){
+        let h2, h3, h4;
+        const firstAya = sura.ayas[0];
 
         if(!firstAya){
             return;
         }
 
-        let h2;
-        let h3;
-        let h4;
-        let title = firstAya.sura === undefined ? {} : meta.suras.sura[firstAya.sura - 1];
         const svgTitle = `assets/images/sura-title/${firstAya.sura}.svg`;
-        const altTitle = `${SURA_AR} ${title.name}`;
+        const altTitle = `${SURA_AR} ${sura.name}`;
 
         if(firstAya.index === 1){
             h2 = (<h2><img src={svgTitle} alt={altTitle} /></h2>);
-            h3 = (<h3>{title.tname} | {title.ename} | {title.type}</h3>);
+            h3 = (<h3>{sura.tname} | {sura.ename} | {sura.type}</h3>);
         }
 
         if(firstAya.bismillah || firstAya.sura === 1){
@@ -63,20 +64,22 @@ export default class Sura extends Component{
     }
 
     getVerse(verse){
-        return verse.reduce(function(accum, aya, index){
+        return verse.reduce(function(accum, aya){
             return aya.sura === 1 && aya.index === 1 ? accum : accum.concat(<Aya attr={aya} />);
         }, []);
     }
 
     stepState(){
         const me = this;
-        const count = me.state.verse.length + 50;
-        const data = me.props.data || [];
-        me.setState({
-            verse: data.slice(0, count)
+        const count = me.state.ayas.length + 50;
+        const ayas = me.props.data.ayas || [];
+        me.setState(function(state, props){
+            return Object.assign({}, state, {
+                ayas: ayas.slice(0, count)
+            });
         });
 
-        if(count < data.length){
+        if(count < ayas.length){
             window.requestAnimationFrame(me.stepState.bind(me));
         }
     }

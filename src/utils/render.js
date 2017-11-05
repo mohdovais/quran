@@ -1,11 +1,5 @@
 import {applyTpl, toArabicNumber} from './utils';
-
-var bismillah = '\u00d8\u00a8\u00d9\u0090\u00d8\u00b3\u00d9\u2019\u00d9\u2026\u00d9\u0090 \u00d8\u00a7\u00d9\u201e\u00d9\u201e\u00d9\u017d\u00d9\u2018\u00d9\u2021\u00d9\u0090 \u00d8\u00a7\u00d9\u201e\u00d8\u00b1\u00d9\u017d\u00d9\u2018\u00d8\u00ad\u00d9\u2019\u00d9\u2026\u00d9\u017d\u00d9\u2020\u00d9\u0090 \u00d8\u00a7\u00d9\u201e\u00d8\u00b1\u00d9\u017d\u00d9\u2018\u00d8\u00ad\u00d9\u0090\u00d9\u0160\u00d9\u2026\u00d9\u0090';
-
-
-function getVerseCount(item) {
-    return '<span class="verse-count" data-index="' + item.index + '"></span>';
-}
+import {bismillah} from '../constants';
 
 function getBismillah(item) {
     return item.bismillah ? '<img height="48px" width="100%" src="assets/images/bismillah.svg" alt="' + bismillah + '" />' : '';

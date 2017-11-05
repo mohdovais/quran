@@ -1,40 +1,48 @@
 import {
-    TYPE_PAGE,
-    ACTION_LOAD
+    TYPE_PAGE
 } from '../constants';
+import getObjectProperty from '../utils/getObjectProperty';
 
-function getPages(count) {
-    var pages = [];
-    for (let i = 1; i <= count; i++) {
-        pages.push({
-            text: i,
-            value: i
-        })
+function getPageOptions(count) {
+    return Array.apply(null, Array(10)).map((v, i) => {
+        const j = i + 1;
+        return {
+            text: j,
+            value: j
+        }
+    });
+}
+
+function getChapters(index, source) {
+    let chapters = [];
+    const suras = getObjectProperty(source, 'meta.suras.sura');
+    const groups = source.quran.filter(function (aya) {
+        return aya.page === index
+    }).reduce(function (accum, item) {
+        let ayas = accum[item.sura] || [];
+        ayas.push(item);
+        accum[item.sura] = ayas;
+        return accum;
+    }, {});
+
+    for (let suraIndex in groups) {
+        chapters.push(Object.assign({}, suras[suraIndex - 1], {
+            ayas: groups[suraIndex]
+        }))
     }
-    return pages;
+
+    return chapters;
 }
 
 export default function reducerPage(currentState, action) {
     const index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
-    const count = currentState.meta.pages.page.length;
-
-    //if (currentState.index === index && currentState.type === TYPE_PAGE) {
-       // return currentState;
-    //} else {
-        let newState = {
+    const maxPages = getObjectProperty(currentState, 'source.meta.pages.page.length');
+    return Object.assign({}, currentState, {
+        display: Object.assign({}, currentState.display, {
             type: TYPE_PAGE,
             index,
-            verse: currentState.quran.filter(function (aya) {
-                return aya.page === index
-            })
-        }
-
-        //if (action.type === ACTION_LOAD || currentState.type !== TYPE_PAGE) {
-            let pages = getPages(count);
-            newState.pages = pages;
-            newState.maxPage = count;
-        //}
-
-        return Object.assign({}, currentState, newState);
-    //}
+            typeOptions: getPageOptions(maxPages),
+            chapters: getChapters(index, currentState.source)
+        })
+    });
 }

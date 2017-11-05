@@ -7,7 +7,6 @@ import SvgAya from './svg-aya';
 import SvgRuku from './svg-ruku';
 import SvgSajda from './svg-sajda';
 
-
 export default class Aya extends Component {
     render(){
         let rukuSign, sajdaSign, bgColor, fillColor, strokeColor;
@@ -34,10 +33,10 @@ export default class Aya extends Component {
                 </span>
                 <span class={verseClass + '-count'}>
                     {sajdaSign}
-                    <SvgAya 
-                        desc={desc} 
-                        strokeColor={strokeColor} 
-                        bgColor={bgColor} 
+                    <SvgAya
+                        desc={desc}
+                        strokeColor={strokeColor}
+                        bgColor={bgColor}
                         fillColor={fillColor}
                     >
                         {toArabicNumber(aya.index)}

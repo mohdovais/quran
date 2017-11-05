@@ -36,7 +36,7 @@ export default class Router{
         const routeMatch = me.getRouteMatch(hash);
         if(routeMatch){
             routeMatch.route.callback.apply(
-                routeMatch.route.scope, 
+                routeMatch.route.scope,
                 Array.prototype.slice.call(routeMatch.match, 1)
             );
         }else{
@@ -47,10 +47,11 @@ export default class Router{
     }
 
     getRouteMatch(hash){
-        let i, match;
+        let i, match, route;
         for(i in this.routes){
-            let route = this.routes[i];
-            if(match = route.regex.exec(hash)){
+            route = this.routes[i];
+            match = route.regex.exec(hash);
+            if(match){
                 return {
                     route,
                     match
@@ -66,6 +67,5 @@ export default class Router{
     redirectTo(route){
         window.location = `#${route}`;
     }
-
 
 }

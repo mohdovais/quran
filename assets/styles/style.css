@@ -26,7 +26,7 @@ article header * {
 }
 
 article header h2 {
-    font-size: 2em; 
+    font-size: 2em;
 }
 
 article h2 img{
@@ -79,4 +79,9 @@ article header h3 {
 footer {
     text-align: center;
     padding: 1em;
+}
+
+.nav .text{
+    font-size: 0.8em;
+    padding: 0 1em;
 }

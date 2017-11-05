@@ -57,5 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
-# Mac
+#VSCode metadata
+.vscode
+
+# Mac files
 .DS_Store

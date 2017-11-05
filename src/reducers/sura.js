@@ -1,9 +1,9 @@
 import {
-    TYPE_SURA,
-    ACTION_LOAD
+    TYPE_SURA
 } from '../constants';
+import getObjProp from '../utils/getObjectProperty';
 
-function getPages(suraList) {
+function getSuraTypeOptions(suraList) {
     return suraList.map((page => {
         return {
             text: `${page.name} ${page.tname}`,
@@ -12,27 +12,27 @@ function getPages(suraList) {
     }));
 }
 
-export default function reducerSura(currentState, action) {
-    const index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
-    //if (action.type !== ACTION_LOAD && currentState.type === TYPE_SURA && currentState.index === index) {
-        //return currentState;
-    //} else {
-
-    
-        let suraList = currentState.meta.suras.sura;
-        let newState = {
-            type: TYPE_SURA,
-            index,
-            verse: currentState.quran.filter((aya) => {
+function getChapters(index, quran, suraMeta) {
+    return [Object.assign({},
+        suraMeta, {
+            ayas: quran.filter((aya) => {
                 return aya.sura === index;
             })
-        };
+        })];
+}
 
-        //if (action.type === ACTION_LOAD || currentState.type !== TYPE_SURA) {
-            newState.maxPage = suraList.length;
-            newState.pages = getPages(suraList);
-        //}
 
-        return Object.assign({}, currentState, newState);
-    //}
+export default function reducerSura(currentState, action) {
+    const source = currentState.source;
+    const suraList = getObjProp(source, 'meta.suras.sura') || [];
+    const index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
+
+    return Object.assign({}, currentState, {
+        display: {
+            index,
+            type: TYPE_SURA,
+            typeOptions: getSuraTypeOptions(suraList),
+            chapters: getChapters(index, source.quran, suraList[index - 1])
+        }
+    });
 }

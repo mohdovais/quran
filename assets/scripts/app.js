@@ -19,7 +19,7 @@ function __$styleInject(css, returnValue) {
   return returnValue;
 }
 
-__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n}\n\narticle header {\n    text-align: center;\n    /*padding: 0 0 1em 0;*/\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em; \n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n.bismillah{\n    width: 240px;\n    height: 55px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.verse-count{\n    margin: 0 1em;\n    font-family: serif;\n}\n\n.verse-count span{\n    font-family: serif;\n}\n\n.verse-count svg{\n    height: 1.5em;\n    vertical-align: middle;\n}\n\n.verse-count svg text{\n    direction: ltr;\n    font-family: serif;\n    fill: red;\n}\n\n.sajda {\n    color: red;\n}\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}", undefined);
+__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n}\n\narticle header {\n    text-align: center;\n    /*padding: 0 0 1em 0;*/\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em;\n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n.bismillah{\n    width: 240px;\n    height: 55px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.verse-count{\n    margin: 0 1em;\n    font-family: serif;\n}\n\n.verse-count span{\n    font-family: serif;\n}\n\n.verse-count svg{\n    height: 1.5em;\n    vertical-align: middle;\n}\n\n.verse-count svg text{\n    direction: ltr;\n    font-family: serif;\n    fill: red;\n}\n\n.sajda {\n    color: red;\n}\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}\n\n.nav .text{\n    font-size: 0.8em;\n    padding: 0 1em;\n}\n", undefined);
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -2440,11 +2440,18 @@ var TYPE_PAGE = 'page';
 var TYPE_SURA = 'sura';
 var ACTION_LOAD = 'LOAD';
 var ACTION_GOTO_INDEX = 'GOTO_INDEX';
+var ACTION_CHANGE_TYPE = 'CHANGE_TYPE';
 
 var SURA_AR = 'سورة‎‎';
-var BISMILLAH_AR = 'سورة‎‎ البقرة';
+var BISMILLAH_AR = '\xD8\xA8\xD9\x90\xD8\xB3\xD9\u2019\xD9\u2026\xD9\x90 \xD8\xA7\xD9\u201E\xD9\u201E\xD9\u017D\xD9\u2018\xD9\u2021\xD9\x90 \xD8\xA7\xD9\u201E\xD8\xB1\xD9\u017D\xD9\u2018\xD8\xAD\xD9\u2019\xD9\u2026\xD9\u017D\xD9\u2020\xD9\x90 \xD8\xA7\xD9\u201E\xD8\xB1\xD9\u017D\xD9\u2018\xD8\xAD\xD9\x90\xD9\u0160\xD9\u2026\xD9\x90';
 
-function getPages(suraList) {
+function getObjectProperty(obj, property) {
+    return property.split('.').reduce(function (acc, prop) {
+        return acc && acc[prop];
+    }, obj);
+}
+
+function getSuraTypeOptions(suraList) {
     return suraList.map(function (page) {
         return {
             text: page.name + ' ' + page.tname,
@@ -2453,99 +2460,109 @@ function getPages(suraList) {
     });
 }
 
-function reducerSura(currentState, action) {
-    var index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
-    //if (action.type !== ACTION_LOAD && currentState.type === TYPE_SURA && currentState.index === index) {
-    //return currentState;
-    //} else {
-
-
-    var suraList = currentState.meta.suras.sura;
-    var newState = {
-        type: TYPE_SURA,
-        index: index,
-        verse: currentState.quran.filter(function (aya) {
+function getChapters(index, quran, suraMeta) {
+    return [Object.assign({}, suraMeta, {
+        ayas: quran.filter(function (aya) {
             return aya.sura === index;
         })
-    };
-
-    //if (action.type === ACTION_LOAD || currentState.type !== TYPE_SURA) {
-    newState.maxPage = suraList.length;
-    newState.pages = getPages(suraList);
-    //}
-
-    return Object.assign({}, currentState, newState);
-    //}
+    })];
 }
 
-function getPages$1(count) {
-    var pages = [];
-    for (var i = 1; i <= count; i++) {
-        pages.push({
-            text: i,
-            value: i
-        });
+function reducerSura(currentState, action) {
+    var source = currentState.source;
+    var suraList = getObjectProperty(source, 'meta.suras.sura') || [];
+    var index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
+
+    return Object.assign({}, currentState, {
+        display: {
+            index: index,
+            type: TYPE_SURA,
+            typeOptions: getSuraTypeOptions(suraList),
+            chapters: getChapters(index, source.quran, suraList[index - 1])
+        }
+    });
+}
+
+function getPageOptions(count) {
+    return Array.apply(null, Array(10)).map(function (v, i) {
+        var j = i + 1;
+        return {
+            text: j,
+            value: j
+        };
+    });
+}
+
+function getChapters$1(index, source) {
+    var chapters = [];
+    var suras = getObjectProperty(source, 'meta.suras.sura');
+    var groups = source.quran.filter(function (aya) {
+        return aya.page === index;
+    }).reduce(function (accum, item) {
+        var ayas = accum[item.sura] || [];
+        ayas.push(item);
+        accum[item.sura] = ayas;
+        return accum;
+    }, {});
+
+    for (var suraIndex in groups) {
+        chapters.push(Object.assign({}, suras[suraIndex - 1], {
+            ayas: groups[suraIndex]
+        }));
     }
-    return pages;
+
+    return chapters;
 }
 
 function reducerPage(currentState, action) {
     var index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
-    var count = currentState.meta.pages.page.length;
-
-    //if (currentState.index === index && currentState.type === TYPE_PAGE) {
-    // return currentState;
-    //} else {
-    var newState = {
-        type: TYPE_PAGE,
-        index: index,
-        verse: currentState.quran.filter(function (aya) {
-            return aya.page === index;
+    var maxPages = getObjectProperty(currentState, 'source.meta.pages.page.length');
+    return Object.assign({}, currentState, {
+        display: Object.assign({}, currentState.display, {
+            type: TYPE_PAGE,
+            index: index,
+            typeOptions: getPageOptions(maxPages),
+            chapters: getChapters$1(index, currentState.source)
         })
-
-        //if (action.type === ACTION_LOAD || currentState.type !== TYPE_PAGE) {
-    };var pages = getPages$1(count);
-    newState.pages = pages;
-    newState.maxPage = count;
-    //}
-
-    return Object.assign({}, currentState, newState);
-    //}
+    });
 }
 
+var capitalize = function (_str) {
+    var str = String(_str);
+    return str.charAt(0).toUpperCase() + str.substring(1);
+};
+
 var initialState = {
-    type: TYPE_SURA,
-    types: [{
-        text: 'Sura',
+    source: {
+        quran: [],
+        meta: {}
+    },
+    dispalyTypes: [{
+        text: capitalize(TYPE_SURA),
         value: TYPE_SURA
     }, {
-        text: 'Page',
+        text: capitalize(TYPE_PAGE),
         value: TYPE_PAGE
     }],
-    index: 1,
-    verse: [],
-    pages: [],
-    maxPage: 0,
-    quran: [],
-    meta: {
-        pages: {
-            page: []
-        },
-        suras: {
-            sura: []
-        }
+    display: {
+        index: 1,
+        type: TYPE_SURA,
+        typeOptions: [],
+        chapters: []
     }
 };
 
-function applyState(state, data) {
+function applySourceData(state, data) {
     return Object.assign({}, state, {
-        meta: data.meta || {},
-        quran: data.quran || []
+        source: {
+            meta: data.meta || {},
+            quran: data.quran || []
+        }
     });
 }
 
 function gotoIndex(state, action) {
-    var type = action.data && action.data.type || state.type;
+    var type = getObjectProperty(action, 'data.type') || getObjectProperty(state, 'display.type');
     switch (type) {
         case TYPE_PAGE:
             return reducerPage(state, action);
@@ -2560,17 +2577,18 @@ function reducer() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
     var action = arguments[1];
 
+    var display = state.display;
     switch (action.type) {
         case 'LOAD':
-            state = applyState(state, action.data);
+            state = applySourceData(state, action.data);
             action = {
                 data: {
-                    index: state.index,
-                    type: state.type
+                    index: display.index,
+                    type: display.type
                 }
             };
-        case 'CHANGE_TYPE':
-        case 'GOTO_INDEX':
+        case ACTION_CHANGE_TYPE:
+        case ACTION_GOTO_INDEX:
             return gotoIndex(state, action);
         default:
             return state;
@@ -2777,23 +2795,35 @@ var Filter = function (_Component) {
 
         var _this = possibleConstructorReturn(this, (Filter.__proto__ || Object.getPrototypeOf(Filter)).call(this, props));
 
-        var store = props.store;
-        _this.state = store && store.getState() || {};
+        _this.state = _this.getStoreState(props.store);
         return _this;
     }
 
-    // after the component gets mounted to the DOM
-
-
     createClass(Filter, [{
+        key: 'getStoreState',
+        value: function getStoreState(store) {
+            var state = store && store.getState() || {};
+            var display = state && state.display || {};
+
+            return {
+                types: state.dispalyTypes || [],
+                type: display.type,
+                typeOptions: display.typeOptions || [],
+                currentIndex: display.index || 0
+            };
+        }
+
+        // after the component gets mounted to the DOM
+
+    }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
             var me = this,
                 store = me.props.store;
 
             me.unsubscribe = store && store.subscribe(function () {
-                me.setState(function (prevState, props) {
-                    return store && store.getState() || {};
+                me.setState(function () {
+                    return me.getStoreState(store);
                 });
             });
         }
@@ -2806,7 +2836,7 @@ var Filter = function (_Component) {
         key: 'gotoIndex',
         value: function gotoIndex$$1(index, event) {
             event.preventDefault();
-            if (index > 0 && index <= this.state.maxPage) {
+            if (index > 0 && index <= this.state.typeOptions.length) {
                 this.props.store.dispatch(gotoIndex$1(index));
             }
         }
@@ -2821,7 +2851,7 @@ var Filter = function (_Component) {
         value: function onTypeChange(event) {
             var type = event.target.value;
             this.props.store.dispatch({
-                type: 'CHANGE_TYPE',
+                type: ACTION_CHANGE_TYPE,
                 data: {
                     type: type,
                     index: 1
@@ -2829,23 +2859,14 @@ var Filter = function (_Component) {
             });
         }
     }, {
-        key: 'previous',
-        value: function previous(event) {
-            this.gotoIndex(this.state.index - 1, event);
-        }
-    }, {
-        key: 'next',
-        value: function next(event) {
-            this.gotoIndex(this.state.index + 1, event);
-        }
-    }, {
         key: 'getOptions',
         value: function getOptions(pages, selectedIndex) {
             var _pages = pages || [];
+            var index = selectedIndex - 1;
             return _pages.map(function (page, i) {
                 return h(
                     'option',
-                    { value: page.value, selected: selectedIndex === i },
+                    { value: page.value, selected: index === i },
                     page.text
                 );
             });
@@ -2866,8 +2887,7 @@ var Filter = function (_Component) {
         key: 'render',
         value: function render$$1(props, state) {
             var me = this,
-                index = (state.index || 1) - 1,
-                options$$1 = me.getOptions(state.pages, index),
+                options$$1 = me.getOptions(state.typeOptions, state.currentIndex),
                 types = me.getTypes(state.types, state.type);
 
             return h(
@@ -2877,17 +2897,6 @@ var Filter = function (_Component) {
                     'fieldset',
                     null,
                     h(
-                        'legend',
-                        null,
-                        state.type
-                    ),
-                    h(
-                        'button',
-                        { disabled: index < 1, onClick: me.previous.bind(me) },
-                        'Previous ',
-                        state.type
-                    ),
-                    h(
                         'select',
                         { onChange: me.onTypeChange.bind(me), 'aria-label': 'Select type' },
                         types
@@ -2896,12 +2905,6 @@ var Filter = function (_Component) {
                         'select',
                         { disabled: state.maxPage < 2, onChange: me.onSelectionChange.bind(me), 'aria-label': 'Select page' },
                         options$$1
-                    ),
-                    h(
-                        'button',
-                        { disabled: state.index >= state.maxPage, onClick: me.next.bind(me) },
-                        'Next ',
-                        state.type
                     )
                 )
             );
@@ -2918,6 +2921,126 @@ var Filter = function (_Component) {
     return Filter;
 }(Component);
 
+var _class = function (_Component) {
+    inherits(_class, _Component);
+
+    function _class(props) {
+        classCallCheck(this, _class);
+
+        var _this = possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+
+        _this.state = _this.getStoreState(props.store);
+        return _this;
+    }
+
+    // after the component gets mounted to the DOM
+
+
+    createClass(_class, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var me = this,
+                store = me.props.store;
+
+            me.unsubscribe = store && store.subscribe(function () {
+                var newState = me.getStoreState(store);
+                var prevState = me.state;
+                if (
+                // assign only if there is a change
+                !(newState.index === prevState.index && newState.type === prevState.type && newState.max === prevState.max)) {
+                    me.setState(function (prevState, props) {
+                        return newState;
+                    });
+                }
+            });
+        }
+    }, {
+        key: 'getStoreState',
+        value: function getStoreState(store) {
+            var storeState = store && store.getState() || {};
+            var display = storeState.display || {};
+            var typeOptions = display.typeOptions || [];
+            var chapters = (display.chapters || []).map(function (chapter) {
+                return chapter;
+            });
+            return {
+                index: display.index || 0,
+                max: typeOptions.length,
+                type: display.type,
+                chapters: chapters
+            };
+        }
+    }, {
+        key: 'gotoIndex',
+        value: function gotoIndex$$1(index, event) {
+            event.preventDefault();
+            if (index > 0 && index <= this.state.max) {
+                this.props.store.dispatch(gotoIndex$1(index));
+            }
+        }
+    }, {
+        key: 'previous',
+        value: function previous(event) {
+            this.gotoIndex(this.state.index - 1, event);
+        }
+    }, {
+        key: 'next',
+        value: function next(event) {
+            this.gotoIndex(this.state.index + 1, event);
+        }
+    }, {
+        key: 'render',
+        value: function render$$1() {
+            var me = this;
+            var state = this.state;
+            var max = state.max;
+            var index = state.index;
+            var chapters = state.chapters.map(function (chapter) {
+                //https://stackoverflow.com/questions/29988144/concat-rtl-string-with-ltr-string-in-javascript
+                return '\u202B' + SURA_AR + ' ' + chapter.name + '\u202C';
+            }).join(', ');
+
+            return h(
+                'nav',
+                { 'class': 'nav' },
+                h(
+                    'span',
+                    { lang: 'ar' },
+                    chapters
+                ),
+                h(
+                    'button',
+                    { 'class': 'prev', disabled: index < 2, onClick: me.previous.bind(me) },
+                    '\u2329 Previous'
+                ),
+                h(
+                    'span',
+                    { 'class': 'text' },
+                    capitalize(state.type),
+                    ' ',
+                    index,
+                    ' of ',
+                    max
+                ),
+                h(
+                    'button',
+                    { 'class': 'next', disabled: index >= max, onClick: me.next.bind(me) },
+                    'Next \u232A'
+                )
+            );
+        }
+
+        // prior to removal from the DOM
+
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this.unsubscribe && this.unsubscribe();
+        }
+    }]);
+    return _class;
+}(Component);
+
 var Header = function (_Component) {
     inherits(Header, _Component);
 
@@ -2932,7 +3055,8 @@ var Header = function (_Component) {
             return h(
                 'header',
                 null,
-                h(Filter, { store: props.store })
+                h(Filter, { store: props.store }),
+                h(_class, { store: props.store })
             );
         }
     }]);
@@ -2941,8 +3065,9 @@ var Header = function (_Component) {
 
 ////"٠١٢٣٤٥٦٧٨٩"
 function toArabicNumber(num) {
+    var arabic = '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669';
     return String(num).split('').reduce(function (accumulator, digit) {
-        return accumulator += '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669'.substr(parseInt(digit), 1);
+        return accumulator += arabic.substr(parseInt(digit), 1);
     }, '');
 }
 
@@ -2993,7 +3118,7 @@ var SvgAya = function (_Component) {
     return SvgAya;
 }(Component);
 
-var _class = function (_Component) {
+var _class$1 = function (_Component) {
     inherits(_class, _Component);
 
     function _class() {
@@ -3032,7 +3157,7 @@ var _class = function (_Component) {
     return _class;
 }(Component);
 
-var _class$1 = function (_Component) {
+var _class$2 = function (_Component) {
     inherits(_class, _Component);
 
     function _class() {
@@ -3091,7 +3216,7 @@ var Aya = function (_Component) {
                 fillColor = '#a1c8e5';
                 strokeColor = '#19435c';
                 rukuSign = h(
-                    _class,
+                    _class$1,
                     { title: 'Ruku ' + aya.ruku },
                     toArabicNumber(aya.ruku)
                 );
@@ -3099,7 +3224,7 @@ var Aya = function (_Component) {
 
             if (aya.sajda) {
                 //sajdaSign = <span role="img" title={`${aya.sajda} sajda`}>{'\u06E9'}</span>
-                sajdaSign = h(_class$1, { title: aya.sajda + ' sajda' });
+                sajdaSign = h(_class$2, { title: aya.sajda + ' sajda' });
             }
 
             return h(
@@ -3177,7 +3302,9 @@ var Sura = function (_Component) {
 
         var _this = possibleConstructorReturn(this, (Sura.__proto__ || Object.getPrototypeOf(Sura)).call(this));
 
-        _this.state.verse = [];
+        _this.state.sura = {
+            ayas: []
+        };
         return _this;
     }
 
@@ -3186,7 +3313,7 @@ var Sura = function (_Component) {
         value: function componentDidMount() {
             var me = this;
             me.setState({
-                verse: []
+                ayas: []
             });
             window.requestAnimationFrame(me.stepState.bind(me));
         }
@@ -3202,27 +3329,28 @@ var Sura = function (_Component) {
         key: 'render',
         value: function render$$1(props, state) {
             var me = this;
+            var sura = props.data;
             return h(
                 'article',
                 { lang: 'ar' },
-                me.getHeader(me.state.verse[0], me.props.meta),
-                me.getVerse(me.state.verse)
+                me.getHeader(sura),
+                me.getVerse(sura.ayas)
             );
         }
     }, {
         key: 'getHeader',
-        value: function getHeader(firstAya, meta) {
+        value: function getHeader(sura) {
+            var h2 = void 0,
+                h3 = void 0,
+                h4 = void 0;
+            var firstAya = sura.ayas[0];
 
             if (!firstAya) {
                 return;
             }
 
-            var h2 = void 0;
-            var h3 = void 0;
-            var h4 = void 0;
-            var title = firstAya.sura === undefined ? {} : meta.suras.sura[firstAya.sura - 1];
             var svgTitle = 'assets/images/sura-title/' + firstAya.sura + '.svg';
-            var altTitle = SURA_AR + ' ' + title.name;
+            var altTitle = SURA_AR + ' ' + sura.name;
 
             if (firstAya.index === 1) {
                 h2 = h(
@@ -3233,11 +3361,11 @@ var Sura = function (_Component) {
                 h3 = h(
                     'h3',
                     null,
-                    title.tname,
+                    sura.tname,
                     ' | ',
-                    title.ename,
+                    sura.ename,
                     ' | ',
-                    title.type
+                    sura.type
                 );
             }
 
@@ -3256,7 +3384,7 @@ var Sura = function (_Component) {
     }, {
         key: 'getVerse',
         value: function getVerse(verse) {
-            return verse.reduce(function (accum, aya, index) {
+            return verse.reduce(function (accum, aya) {
                 return aya.sura === 1 && aya.index === 1 ? accum : accum.concat(h(Aya, { attr: aya }));
             }, []);
         }
@@ -3264,13 +3392,15 @@ var Sura = function (_Component) {
         key: 'stepState',
         value: function stepState() {
             var me = this;
-            var count = me.state.verse.length + 50;
-            var data = me.props.data || [];
-            me.setState({
-                verse: data.slice(0, count)
+            var count = me.state.ayas.length + 50;
+            var ayas = me.props.data.ayas || [];
+            me.setState(function (state, props) {
+                return Object.assign({}, state, {
+                    ayas: ayas.slice(0, count)
+                });
             });
 
-            if (count < data.length) {
+            if (count < ayas.length) {
                 window.requestAnimationFrame(me.stepState.bind(me));
             }
         }
@@ -3283,7 +3413,11 @@ var Content = function (_Component) {
 
     function Content(props) {
         classCallCheck(this, Content);
-        return possibleConstructorReturn(this, (Content.__proto__ || Object.getPrototypeOf(Content)).call(this, props));
+
+        var _this = possibleConstructorReturn(this, (Content.__proto__ || Object.getPrototypeOf(Content)).call(this, props));
+
+        _this.state = _this.getStoreState(props.store);
+        return _this;
     }
 
     // after the component gets mounted to the DOM
@@ -3297,39 +3431,27 @@ var Content = function (_Component) {
 
             me.unsubscribe = store.subscribe(function () {
                 me.setState(function (prevState, props) {
-                    return store.getState();
+                    return me.getStoreState(store);
                 });
             });
         }
-
-        /**
-         * 
-         * @param {Array} verse 
-         */
-
     }, {
-        key: 'getVerse',
-        value: function getVerse(verse, meta) {
-
-            var groups = verse.reduce(function (accum, aya) {
-                var ayat = accum[aya.sura] || (accum[aya.sura] = []);
-                ayat.push(aya);
-                return accum;
-            }, {});
-
-            return Object.keys(groups).reduce(function (accum, groupName) {
-                accum.push(h(Sura, { data: groups[groupName], meta: meta }));
-                return accum;
-            }, []);
+        key: 'getStoreState',
+        value: function getStoreState(store) {
+            var state = store && store.getState() || {};
+            return {
+                chapters: getObjectProperty(state, 'display.chapters') || []
+            };
         }
     }, {
         key: 'render',
         value: function render$$1(props, state) {
-            var ayat = this.getVerse(state.verse || [], state.meta);
             return h(
                 'main',
                 null,
-                ayat
+                state.chapters.map(function (chapter) {
+                    return h(Sura, { data: chapter });
+                })
             );
         }
 
@@ -3342,65 +3464,6 @@ var Content = function (_Component) {
         }
     }]);
     return Content;
-}(Component);
-
-var Footer = function (_Component) {
-    inherits(Footer, _Component);
-
-    function Footer(props) {
-        classCallCheck(this, Footer);
-
-        var _this = possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).call(this, props));
-
-        var me = _this,
-            store = props.store,
-            newState = store && store.getState() || {};
-
-        me.setState(newState);
-
-        return _this;
-    }
-
-    // after the component gets mounted to the DOM
-
-
-    createClass(Footer, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var me = this,
-                store = me.props.store,
-                newState = store && store.getState() || {};
-
-            me.unsubscribe = store && store.subscribe(function () {
-                me.setState(function (prevState, props) {
-                    return newState;
-                });
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render$$1(props, state) {
-            return h(
-                'footer',
-                null,
-                state.type,
-                ' ',
-                state.index,
-                ' of ',
-                state.maxPage
-            );
-        }
-
-        // prior to removal from the DOM
-
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            var unsubscribe = this.unsubscribe;
-            unsubscribe && unsubscribe();
-        }
-    }]);
-    return Footer;
 }(Component);
 
 var App = function (_Component) {
@@ -3420,7 +3483,7 @@ var App = function (_Component) {
                 { hidden: true },
                 h(Header, { store: store }),
                 h(Content, { store: store }),
-                h(Footer, { store: store }),
+                h(_class, { store: store }),
                 '\xA0'
             );
         }
@@ -3482,10 +3545,12 @@ var Router = function () {
         key: 'getRouteMatch',
         value: function getRouteMatch(hash) {
             var i = void 0,
-                match = void 0;
+                match = void 0,
+                route = void 0;
             for (i in this.routes) {
-                var route = this.routes[i];
-                if (match = route.regex.exec(hash)) {
+                route = this.routes[i];
+                match = route.regex.exec(hash);
+                if (match) {
                     return {
                         route: route,
                         match: match
@@ -3508,9 +3573,9 @@ var Router = function () {
 if (!window.Promise) {
     window.Promise = promise;
 }
-
+var doc = document;
 var store = createStore(reducer);
-var loader = document.querySelector('.loader');
+var loader = doc.querySelector('.loader');
 
 /* *********************************************
  * Router Config Start
@@ -3521,7 +3586,7 @@ var router = new Router({
         var index = parseInt(_index, 10);
         if (index && index > 0) {
             var state = state = store.getState();
-            if (!(state.index === index && state.type === type)) {
+            if (!(state.display.index === index && state.display.type === type)) {
                 store.dispatch({
                     type: ACTION_GOTO_INDEX,
                     data: {
@@ -3541,7 +3606,8 @@ var router = new Router({
 
 store.subscribe(function () {
     var state = store.getState();
-    router.redirectTo(state.type + '/' + state.index);
+    var page = state.display;
+    router.redirectTo(page.type + '/' + page.index);
 });
 
 /* *********************************************
@@ -3550,7 +3616,7 @@ store.subscribe(function () {
 
 var app = render(h(App, {
     store: store
-}), document.body, document.getElementById('app'));
+}), doc.body, doc.getElementById('app'));
 
 function hidePreloader() {
     app.removeAttribute('hidden');
@@ -3615,7 +3681,7 @@ if ('serviceWorker' in navigator) {
     node.href = 'https://fonts.googleapis.com/css?family=Amiri';
     node.type = 'text/css';
     existingNode.parentNode.insertBefore(node, existingNode);
-})(document, 'link');
+})(doc, 'link');
 
 }());
 //# sourceMappingURL=app.js.map

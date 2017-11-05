@@ -1,6 +1,4 @@
 import xml2json from './xml2json';
-//import 'whatwg-fetch';
-
 
 export default function fetchXML(url) {
     return fetch(url)

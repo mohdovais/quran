@@ -4,6 +4,9 @@
   "description": "Tring to setup preact :(",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf ./dist && mkdir dist",
+    "prebuild": "npm run clean",
+    "build": "rollup -c ./config/prod.js",
     "test": "why test"
   },
   "author": "Mohd Ovais",

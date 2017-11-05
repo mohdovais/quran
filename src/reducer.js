@@ -1,43 +1,45 @@
 import {
     TYPE_PAGE,
-    TYPE_SURA
+    TYPE_SURA,
+    ACTION_CHANGE_TYPE,
+    ACTION_GOTO_INDEX
 } from './constants';
 import reducerSura from './reducers/sura';
 import reducerPage from './reducers/page';
+import capitalize from './utils/capitalize';
+import getObjectProperty from './utils/getObjectProperty';
 
 const initialState = {
-    type: TYPE_SURA,
-    types: [{
-        text: 'Sura',
+    source: {
+        quran: [],
+        meta: {}
+    },
+    dispalyTypes: [{
+        text: capitalize(TYPE_SURA),
         value: TYPE_SURA
     }, {
-        text: 'Page',
+        text: capitalize(TYPE_PAGE),
         value: TYPE_PAGE
     }],
-    index: 1,
-    verse: [],
-    pages: [],
-    maxPage: 0,
-    quran: [],
-    meta: {
-        pages: {
-            page: []
-        },
-        suras: {
-            sura: []
-        }
+    display: {
+        index: 1,
+        type: TYPE_SURA,
+        typeOptions: [],
+        chapters: []
     }
 }
 
-function applyState(state, data) {
+function applySourceData(state, data) {
     return Object.assign({}, state, {
-        meta: data.meta || {},
-        quran: data.quran || []
+        source: {
+            meta: data.meta || {},
+            quran: data.quran || []
+        }
     });
 }
 
 function gotoIndex(state, action) {
-    const type = action.data && action.data.type || state.type;
+    const type = getObjectProperty(action, 'data.type') || getObjectProperty(state, 'display.type');
     switch (type) {
         case TYPE_PAGE:
             return reducerPage(state, action);
@@ -49,17 +51,18 @@ function gotoIndex(state, action) {
 }
 
 export default function reducer(state = initialState, action) {
+    const display = state.display;
     switch (action.type) {
         case 'LOAD':
-            state = applyState(state, action.data);
+            state = applySourceData(state, action.data);
             action = {
                 data: {
-                    index: state.index,
-                    type: state.type
+                    index: display.index,
+                    type: display.type
                 }
             }
-        case 'CHANGE_TYPE':
-        case 'GOTO_INDEX':
+        case ACTION_CHANGE_TYPE:
+        case ACTION_GOTO_INDEX:
             return gotoIndex(state, action);
         default:
             return state;

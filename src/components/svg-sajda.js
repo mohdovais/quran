@@ -4,12 +4,12 @@ export default class extends Component{
     render(){
         const props = this.props;
         return (
-            <svg 
+            <svg
                 viewBox="0 0 99 147"
-                role="img" 
-                aria-labelledby="title" 
-                class={props.className} 
-                width={props.width} 
+                role="img"
+                aria-labelledby="title"
+                class={props.className}
+                width={props.width}
                 height={props.height}
             >
                 <title>{props.title}</title>
