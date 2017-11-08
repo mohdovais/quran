@@ -1,4 +1,5 @@
 import {h, Component} from 'preact';
+import guid from '../utils/guid';
 
 export default class SvgAya extends Component{
     render(){
@@ -6,10 +7,11 @@ export default class SvgAya extends Component{
         const fillColor = props.fillColor || '#e5bea1';
         const strokeColor = props.strokeColor || '#5c3219';
         const bgColor = props.bgColor || '#f5eed2';
+        const id = guid();
 
         return (
-            <svg viewBox="0 0 1250 1625" role="img" aria-labelledby="title desc" class={props.className}>
-            <title>{props.desc}</title>
+            <svg viewBox="0 0 1250 1625" role="img" aria-labelledby={id} class={props.className}>
+            <title id={id}>{props.desc}</title>
             <g stroke={strokeColor} stroke-width="30">
               <circle r="605" cx="633" cy="822" fill={fillColor}/>
               <circle r="510" cx="633" cy="822" fill={bgColor} />

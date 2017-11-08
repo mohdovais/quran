@@ -2,11 +2,16 @@ import '../assets/styles/style.css';
 import './polyfills/object-assign';
 import Promise from 'promise-polyfill';
 import 'whatwg-fetch';
-import {h, render} from 'preact';
-import {createStore} from 'redux';
+import {
+    h,
+    render
+} from 'preact';
+import {
+    createStore
+} from 'redux';
 import fetchXml2Json from './utils/fetch-xml-json';
-import flattenSura from './utils/flatten-sura';
-import mergeMeta from './utils/merge-sura-meta';
+//import flattenSura from './utils/flatten-sura';
+//import mergeMeta from './utils/merge-sura-meta';
 import reducer from './reducer';
 import App from './components/app';
 import Router from './router';
@@ -31,12 +36,10 @@ const router = new Router({
         const index = parseInt(_index, 10);
         if (index && index > 0) {
             let state = state = store.getState();
-            if (
-                !(
-                    state.display.index === index
-                    && state.display.type === type
-                )
-            ) {
+            if (!(
+                    state.display.index === index &&
+                    state.display.type === type
+                )) {
                 store.dispatch({
                     type: ACTION_GOTO_INDEX,
                     data: {
@@ -74,11 +77,29 @@ function hidePreloader() {
     loader.setAttribute('hidden', true);
 }
 
+var p0 = performance.now();
+var webWorker;
+if (window.Worker) {
+    webWorker = new Worker('web-worker.js');
+    webWorker.onmessage = function (e) {
+        var response = e.data;
+        switch (response.type) {
+            case 'merge':
+                store.dispatch({
+                    type: ACTION_LOAD,
+                    data: response.data
+                });
+                hidePreloader();
+        }
+    }
+}
+
 function init() {
     Promise.all([
         fetchXml2Json('assets/data/quran-simple.xml'),
         fetchXml2Json('assets/data/quran-data.xml')
     ]).then(function (responses) {
+        /*
         const verse = flattenSura(responses[0].quran.sura);
         const meta = responses[1].quran;
 
@@ -89,8 +110,15 @@ function init() {
                 meta
             }
         });
+        */
 
-        hidePreloader();
+        webWorker.postMessage({
+            type: 'merge',
+            data: {
+                chapters: responses[0].quran.sura,
+                meta: responses[1].quran
+            }
+        });
 
     }, function (e) {
         console.log(e)

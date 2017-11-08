@@ -2350,92 +2350,6 @@ function fetchXML(url) {
     });
 }
 
-function flattenSura(suras) {
-    return suras.reduce(function (accumulator, sura) {
-        return accumulator.concat(sura.aya.map(function (obj) {
-            return Object.assign({
-                sura: parseInt(sura.index, 10)
-            }, obj, {
-                index: parseInt(obj.index)
-            });
-        }));
-    }, []);
-}
-
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-if (!Array.prototype.find) {
-    Object.defineProperty(Array.prototype, 'find', {
-        value: function value(predicate) {
-            // 1. Let O be ? ToObject(this value).
-            if (this == null) {
-                throw new TypeError('"this" is null or not defined');
-            }
-
-            var o = Object(this);
-
-            // 2. Let len be ? ToLength(? Get(O, "length")).
-            var len = o.length >>> 0;
-
-            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-            if (typeof predicate !== 'function') {
-                throw new TypeError('predicate must be a function');
-            }
-
-            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-            var thisArg = arguments[1];
-
-            // 5. Let k be 0.
-            var k = 0;
-
-            // 6. Repeat, while k < len
-            while (k < len) {
-                // a. Let Pk be ! ToString(k).
-                // b. Let kValue be ? Get(O, Pk).
-                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-                // d. If testResult is true, return kValue.
-                var kValue = o[k];
-                if (predicate.call(thisArg, kValue, k, o)) {
-                    return kValue;
-                }
-                // e. Increase k by 1.
-                k++;
-            }
-
-            // 7. Return undefined.
-            return undefined;
-        }
-    });
-}
-
-function mergeMeta(ayas, meta) {
-    var p = 1;
-    var r = 1;
-    return ayas.map(function (aya, index, array) {
-        var nextAya = array[index + 1];
-        var page = meta.pages.page[p];
-        var ruku = meta.rukus.ruku[r];
-        var isRuku = false;
-        var sajda = meta.sajdas.sajda.find(function (s) {
-            return s.sura == aya.sura && s.aya == aya.index;
-        });
-
-        if (page && aya.sura == page.sura && aya.index == page.aya) {
-            p++;
-        }
-
-        if (ruku && nextAya.sura == ruku.sura && nextAya.index == ruku.aya) {
-            isRuku = ruku.index;
-            r++;
-        }
-
-        return Object.assign(Object.create(null), {
-            page: p,
-            sajda: sajda && sajda.type || false,
-            ruku: isRuku
-        }, aya);
-    });
-}
-
 var TYPE_PAGE = 'page';
 var TYPE_SURA = 'sura';
 var ACTION_LOAD = 'LOAD';
@@ -3071,6 +2985,14 @@ function toArabicNumber(num) {
     }, '');
 }
 
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+
+var guid = function () {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+};
+
 var SvgAya = function (_Component) {
     inherits(SvgAya, _Component);
 
@@ -3086,13 +3008,14 @@ var SvgAya = function (_Component) {
             var fillColor = props.fillColor || '#e5bea1';
             var strokeColor = props.strokeColor || '#5c3219';
             var bgColor = props.bgColor || '#f5eed2';
+            var id = guid();
 
             return h(
                 'svg',
-                { viewBox: '0 0 1250 1625', role: 'img', 'aria-labelledby': 'title desc', 'class': props.className },
+                { viewBox: '0 0 1250 1625', role: 'img', 'aria-labelledby': id, 'class': props.className },
                 h(
                     'title',
-                    null,
+                    { id: id },
                     props.desc
                 ),
                 h(
@@ -3127,28 +3050,29 @@ var _class$1 = function (_Component) {
     }
 
     createClass(_class, [{
-        key: "render",
+        key: 'render',
         value: function render$$1() {
             var props = this.props;
+            var id = guid();
             return h(
-                "svg",
+                'svg',
                 {
-                    viewBox: "0 0 1250 1625",
-                    role: "img",
-                    "aria-labelledby": "title",
-                    "class": props.className,
+                    viewBox: '0 0 1250 1625',
+                    role: 'img',
+                    'aria-labelledby': id,
+                    'class': props.className,
                     width: props.width,
                     height: props.height
                 },
                 h(
-                    "title",
-                    null,
+                    'title',
+                    { id: id },
                     props.title
                 ),
-                h("path", { fill: "#19435c", d: "M1002.612 1402.795L752.454 1567.92q-205.664 0-318.384-16.81-194.788-28.673-300.586-114.696Q0 1328.638 0 1126.929q0-122.608 37.573-220.496 30.652-80.09 88-151.282 27.686-33.618 96.9-101.843-94.922-47.46-131.506-82.068-81.08-76.135-81.08-192.81 0-104.81 88.001-205.664Q198.743 57.08 342.114 57.08q64.27 0 136.45 37.573 48.45 24.72 121.62 82.068-96.9 0-198.744 12.854-131.506 16.81-212.585 48.45-98.877 38.562-98.877 94.922 0 60.315 113.709 114.697 95.91 45.483 217.529 64.27 98.877-53.393 192.81-90.967 104.81-41.528 217.53-69.214l-41.53 154.248q-205.663 80.09-296.63 122.608-183.911 87.012-281.8 177.978-125.573 116.675-125.573 250.16 0 139.416 104.81 219.506 90.966 69.214 267.956 97.888 140.405 22.742 357.935 22.742 46.472 0 92.944-.989l92.944-1.978v8.9z" }),
+                h('path', { fill: '#19435c', d: 'M1002.612 1402.795L752.454 1567.92q-205.664 0-318.384-16.81-194.788-28.673-300.586-114.696Q0 1328.638 0 1126.929q0-122.608 37.573-220.496 30.652-80.09 88-151.282 27.686-33.618 96.9-101.843-94.922-47.46-131.506-82.068-81.08-76.135-81.08-192.81 0-104.81 88.001-205.664Q198.743 57.08 342.114 57.08q64.27 0 136.45 37.573 48.45 24.72 121.62 82.068-96.9 0-198.744 12.854-131.506 16.81-212.585 48.45-98.877 38.562-98.877 94.922 0 60.315 113.709 114.697 95.91 45.483 217.529 64.27 98.877-53.393 192.81-90.967 104.81-41.528 217.53-69.214l-41.53 154.248q-205.663 80.09-296.63 122.608-183.911 87.012-281.8 177.978-125.573 116.675-125.573 250.16 0 139.416 104.81 219.506 90.966 69.214 267.956 97.888 140.405 22.742 357.935 22.742 46.472 0 92.944-.989l92.944-1.978v8.9z' }),
                 h(
-                    "text",
-                    { x: "500", y: "1200", "font-size": "700", "text-anchor": "middle" },
+                    'text',
+                    { x: '500', y: '1200', 'font-size': '700', 'text-anchor': 'middle' },
                     props.children[0]
                 )
             );
@@ -3166,25 +3090,26 @@ var _class$2 = function (_Component) {
     }
 
     createClass(_class, [{
-        key: "render",
+        key: 'render',
         value: function render$$1() {
             var props = this.props;
+            var id = id();
             return h(
-                "svg",
+                'svg',
                 {
-                    viewBox: "0 0 99 147",
-                    role: "img",
-                    "aria-labelledby": "title",
-                    "class": props.className,
+                    viewBox: '0 0 99 147',
+                    role: 'img',
+                    'aria-labelledby': id,
+                    'class': props.className,
                     width: props.width,
                     height: props.height
                 },
                 h(
-                    "title",
-                    null,
+                    'title',
+                    { id: id },
                     props.title
                 ),
-                h("path", { d: "M99.229 147.305H0l20.04-22.94v-51.68L0 49.923 49.57 0 99.23 49.922l-20.04 22.764v51.68l20.04 22.939zm-6.856-97.383L49.57 6.855 6.855 49.922l18.457 20.83v55.547L11.25 142.383h76.729l-14.063-16.084V70.752l18.457-20.83zm-9.316 0l-13.184 15.03v70.839H29.355v-70.84l-13.183-15.03L49.57 16.437l33.487 33.486zm-6.416 0l-27.07-27.07-26.983 27.07 11.074 12.305v68.73h31.904v-68.73l11.075-12.305zm-7.823 0l-7.734 8.525v65.39h-22.94v-65.39l-7.734-8.525 19.16-19.6 19.248 19.6zm-4.658 0L49.57 34.98 35.068 49.922l6.504 7.119v63.105h15.996V57.041l6.592-7.12z" })
+                h('path', { d: 'M99.229 147.305H0l20.04-22.94v-51.68L0 49.923 49.57 0 99.23 49.922l-20.04 22.764v51.68l20.04 22.939zm-6.856-97.383L49.57 6.855 6.855 49.922l18.457 20.83v55.547L11.25 142.383h76.729l-14.063-16.084V70.752l18.457-20.83zm-9.316 0l-13.184 15.03v70.839H29.355v-70.84l-13.183-15.03L49.57 16.437l33.487 33.486zm-6.416 0l-27.07-27.07-26.983 27.07 11.074 12.305v68.73h31.904v-68.73l11.075-12.305zm-7.823 0l-7.734 8.525v65.39h-22.94v-65.39l-7.734-8.525 19.16-19.6 19.248 19.6zm-4.658 0L49.57 34.98 35.068 49.922l6.504 7.119v63.105h15.996V57.041l6.592-7.12z' })
             );
         }
     }]);
@@ -3273,16 +3198,16 @@ var Bismillah = function (_Component) {
                 {
                     viewBox: "0 0 570.4 128.4",
                     role: "img",
-                    "aria-labelledby": "title desc",
+                    "aria-labelledby": "bismillah-title bismillah-desc",
                     className: this.props.className },
                 h(
                     "title",
-                    null,
+                    { id: "bismillah-title" },
                     "In the name of Allah, the most beneficial, the most merciful"
                 ),
                 h(
                     "desc",
-                    null,
+                    { id: "bismillah-desc" },
                     this.props.desc
                 ),
                 h("path", {
@@ -3570,6 +3495,8 @@ var Router = function () {
     return Router;
 }();
 
+//import flattenSura from './utils/flatten-sura';
+//import mergeMeta from './utils/merge-sura-meta';
 if (!window.Promise) {
     window.Promise = promise;
 }
@@ -3623,20 +3550,44 @@ function hidePreloader() {
     loader.setAttribute('hidden', true);
 }
 
+var p0 = performance.now();
+var webWorker;
+if (window.Worker) {
+    webWorker = new Worker('web-worker.js');
+    webWorker.onmessage = function (e) {
+        var response = e.data;
+        switch (response.type) {
+            case 'merge':
+                store.dispatch({
+                    type: ACTION_LOAD,
+                    data: response.data
+                });
+                hidePreloader();
+        }
+    };
+}
+
 function init() {
     promise.all([fetchXML('assets/data/quran-simple.xml'), fetchXML('assets/data/quran-data.xml')]).then(function (responses) {
-        var verse = flattenSura(responses[0].quran.sura);
-        var meta = responses[1].quran;
-
-        store.dispatch({
+        /*
+        const verse = flattenSura(responses[0].quran.sura);
+        const meta = responses[1].quran;
+         store.dispatch({
             type: ACTION_LOAD,
             data: {
                 quran: mergeMeta(verse, meta),
-                meta: meta
+                meta
             }
         });
+        */
 
-        hidePreloader();
+        webWorker.postMessage({
+            type: 'merge',
+            data: {
+                chapters: responses[0].quran.sura,
+                meta: responses[1].quran
+            }
+        });
     }, function (e) {
         console.log(e);
     });

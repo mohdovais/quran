@@ -3,7 +3,7 @@ import xml2json from './xml2json';
 export default function fetchXML(url) {
     return fetch(url)
         .then(function (response) {
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error(response.status)
             }
             return response.text()
