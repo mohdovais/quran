@@ -62,12 +62,12 @@ article header h3 {
 
 .verse-count svg{
     height: 1.5em;
+    width: 1em;
     vertical-align: middle;
 }
 
 .verse-count svg text{
     direction: ltr;
-    font-family: serif;
     fill: red;
 }
 

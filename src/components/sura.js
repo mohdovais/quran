@@ -11,27 +11,29 @@ export default class Sura extends Component{
 
     constructor() {
         super();
-        this.state.sura = {
+        this.state = {
             ayas: []
         };
     }
 
     componentDidMount(){
         const me = this;
-        me.setState({
-            ayas: []
-        });
         window.requestAnimationFrame(me.stepState.bind(me));
     }
 
     // before new props get accepted of already rendered
     componentWillReceiveProps() {
+        this.setState({
+            ayas: []
+        });
         this.componentDidMount();
     }
 
     render(props, state){
         const me = this;
-        const sura = props.data;
+        //const sura = props.data;
+        const sura = me.state;
+
         return (
             <article lang="ar">
                 {me.getHeader(sura)}
@@ -73,8 +75,9 @@ export default class Sura extends Component{
         const me = this;
         const count = me.state.ayas.length + 50;
         const ayas = me.props.data.ayas || [];
+
         me.setState(function(state, props){
-            return Object.assign({}, state, {
+            return Object.assign({}, me.props.data, {
                 ayas: ayas.slice(0, count)
             });
         });

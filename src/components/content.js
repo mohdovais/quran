@@ -3,7 +3,6 @@ import {
     Component
 } from 'preact';
 import Sura from './sura';
-import getObjProp from '../utils/getObjectProperty';
 
 export default class Content extends Component {
 
@@ -27,7 +26,7 @@ export default class Content extends Component {
     getStoreState(store) {
         const state = store && store.getState() || {};
         return {
-            chapters: getObjProp(state, 'display.chapters') || []
+            chapters: state.pageChapters || []
         }
     }
 

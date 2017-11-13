@@ -4,7 +4,7 @@ import {
 import getObjectProperty from '../utils/getObjectProperty';
 
 function getPageOptions(count) {
-    return Array.apply(null, Array(10)).map((v, i) => {
+    return Array.apply(null, Array(count)).map((v, i) => {
         const j = i + 1;
         return {
             text: j,

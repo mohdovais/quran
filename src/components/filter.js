@@ -1,5 +1,5 @@
 import {h, Component} from 'preact';
-import {gotoIndex} from '../actions';
+import {gotoIndex} from '../reducers/actions';
 import {ACTION_CHANGE_TYPE} from '../constants';
 
 export default class Filter extends Component {
@@ -11,14 +11,19 @@ export default class Filter extends Component {
 
     getStoreState(store){
         const state = store && store.getState() || {};
-        const display = state && state.display || {};
+        const props = ['dispalyTypes', 'pageIndex', 'pageType', 'pagingOptions'];
 
-        return {
-            types: state.dispalyTypes || [],
-            type: display.type,
-            typeOptions: display.typeOptions || [],
-            currentIndex: display.index || 0
+        if(props.indexOf(state.lastPropertyChanged) !== -1){
+            return {
+                types: state.dispalyTypes || [],
+                type: state.pageType,
+                typeOptions: state.pagingOptions || [],
+                currentIndex: state.pageIndex || 0
+            }
+        }else{
+            return this.state;
         }
+
     }
 
     // after the component gets mounted to the DOM
@@ -38,9 +43,10 @@ export default class Filter extends Component {
     }
 
     gotoIndex(index, event){
+        const me = this;
         event.preventDefault();
-        if(index > 0 && index <= this.state.typeOptions.length){
-            this.props.store.dispatch(gotoIndex(index));
+        if(index > 0 && index <= me.state.typeOptions.length){
+            me.props.store.dispatch(gotoIndex(me.state.type, index));
         }
     }
 

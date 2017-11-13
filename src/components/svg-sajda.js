@@ -4,7 +4,7 @@ import guid from '../utils/guid';
 export default class extends Component{
     render(){
         const props = this.props;
-        const id = id();
+        const id = guid();
         return (
             <svg
                 viewBox="0 0 99 147"

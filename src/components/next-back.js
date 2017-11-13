@@ -2,11 +2,9 @@ import {
     h,
     Component
 } from 'preact';
-import {
-    gotoIndex
-} from '../actions';
 import capitalize from '../utils/capitalize';
 import {SURA_AR} from '../constants';
+import {ACTION_GOTO_INDEX} from '../constants';
 
 export default class extends Component {
 
@@ -22,41 +20,36 @@ export default class extends Component {
 
         me.unsubscribe = store && store.subscribe(() => {
             const newState = me.getStoreState(store);
-            const prevState = me.state;
-            if(
-                // assign only if there is a change
-                !(
-                    newState.index === prevState.index &&
-                    newState.type === prevState.type &&
-                    newState.max === prevState.max
-                )
-            ){
-                me.setState(function (prevState, props) {
-                    return newState;
-                });
-            }
+            me.setState(function (prevState, props) {
+                return newState;
+            });
         })
     }
 
     getStoreState(store) {
         const storeState = store && store.getState() || {};
-        const display = storeState.display || {};
-        const typeOptions = display.typeOptions || [];
-        const chapters = (display.chapters || []).map(function (chapter) {
-            return chapter
-        })
+        const chapters = storeState.pageChapters.map(function (pageChapter) {
+            return pageChapter.chapter;
+        });
         return {
-            index: display.index || 0,
-            max: typeOptions.length,
-            type: display.type,
-            chapters
+            index: storeState.pageIndex || 0,
+            max: storeState.pagingOptions.length,
+            type: storeState.pageType,
+            chapters: storeState.pageChapters
         }
     }
 
     gotoIndex(index, event) {
+        const type = this.state.type;
         event.preventDefault();
         if (index > 0 && index <= this.state.max) {
-            this.props.store.dispatch(gotoIndex(index));
+            this.props.store.dispatch({
+                type: ACTION_GOTO_INDEX,
+                data: {
+                    index,
+                    type
+                }
+            });
         }
     }
 

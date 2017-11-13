@@ -1,8 +1,9 @@
 var CACHE_NAME = 'cache-quran-v1';
 var urlsToCache = [
-  '/~ovais/quran/',
+  '/quran/',
   'index.html',
   'assets/scripts/app.js',
+  'assets/scripts/web-worker.js',
   'assets/data/quran-data.xml',
   'assets/data/quran-simple.xml'
 ];
@@ -36,7 +37,6 @@ self.addEventListener('activate', function (event) {
 
 // FETCH
 self.addEventListener('fetch', function(event) {
-  console.log(event)
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {

@@ -1,6 +1,6 @@
 import xml2json from './xml2json';
 
-export default function fetchXML(url) {
+export default function (url) {
     return fetch(url)
         .then(function (response) {
             if (!response.ok) {

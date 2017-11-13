@@ -1,31 +1,32 @@
 import '../assets/styles/style.css';
 import './polyfills/object-assign';
-import Promise from 'promise-polyfill';
-import 'whatwg-fetch';
+import FakePromise from 'promise-polyfill';
+//import 'whatwg-fetch';
 import {
     h,
     render
 } from 'preact';
-import {
-    createStore
-} from 'redux';
+
 import fetchXml2Json from './utils/fetch-xml-json';
-//import flattenSura from './utils/flatten-sura';
-//import mergeMeta from './utils/merge-sura-meta';
-import reducer from './reducer';
 import App from './components/app';
 import Router from './router';
+import googleFonts from './googlefonts';
 import {
     ACTION_LOAD,
     ACTION_GOTO_INDEX
 } from './constants';
+import store from './reducers/store';
 
 if (!window.Promise) {
-    window.Promise = Promise;
+   window.Promise = FakePromise;
 }
+
 const doc = document;
-const store = createStore(reducer);
-const loader = doc.querySelector('.loader');
+
+
+const app = render(h(App, {
+    store: store
+}), doc.body, doc.getElementById('app'));
 
 /* *********************************************
  * Router Config Start
@@ -34,16 +35,16 @@ const loader = doc.querySelector('.loader');
 const router = new Router({
     '(sura|page)\/(\\d+)': function (type, _index) {
         const index = parseInt(_index, 10);
+        const state = store.getState();
         if (index && index > 0) {
-            let state = state = store.getState();
             if (!(
-                    state.display.index === index &&
-                    state.display.type === type
+                    state.pageIndex === index &&
+                    state.pageType === type
                 )) {
                 store.dispatch({
                     type: ACTION_GOTO_INDEX,
                     data: {
-                        type: type,
+                        type,
                         index
                     }
                 });
@@ -59,39 +60,16 @@ const router = new Router({
 
 store.subscribe(function () {
     const state = store.getState();
-    const page = state.display;
-    router.redirectTo(`${page.type}/${page.index}`)
+    router.redirectTo(`${state.pageType}/${state.pageIndex}`);
 });
 
 /* *********************************************
  * Router End
  * ******************************************* */
 
-
-const app = render(h(App, {
-    store: store
-}), doc.body, doc.getElementById('app'));
-
 function hidePreloader() {
     app.removeAttribute('hidden');
-    loader.setAttribute('hidden', true);
-}
-
-var p0 = performance.now();
-var webWorker;
-if (window.Worker) {
-    webWorker = new Worker('web-worker.js');
-    webWorker.onmessage = function (e) {
-        var response = e.data;
-        switch (response.type) {
-            case 'merge':
-                store.dispatch({
-                    type: ACTION_LOAD,
-                    data: response.data
-                });
-                hidePreloader();
-        }
-    }
+    doc.querySelector('.loader').setAttribute('hidden', true);
 }
 
 function init() {
@@ -99,26 +77,16 @@ function init() {
         fetchXml2Json('assets/data/quran-simple.xml'),
         fetchXml2Json('assets/data/quran-data.xml')
     ]).then(function (responses) {
-        /*
-        const verse = flattenSura(responses[0].quran.sura);
-        const meta = responses[1].quran;
 
         store.dispatch({
             type: ACTION_LOAD,
             data: {
-                quran: mergeMeta(verse, meta),
-                meta
-            }
-        });
-        */
-
-        webWorker.postMessage({
-            type: 'merge',
-            data: {
-                chapters: responses[0].quran.sura,
+                quran: responses[0].quran.sura,
                 meta: responses[1].quran
             }
         });
+
+        hidePreloader();
 
     }, function (e) {
         console.log(e)
@@ -127,41 +95,5 @@ function init() {
 
 init();
 
-/*
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        "use strict"
-        navigator.serviceWorker
-        .getRegistration()
-        .then(function (registration) {
-            if (registration && registration.active) {
-                //registration.unregister()
-            }
-
-            if (!registration || !navigator.serviceWorker.controller) {
-                navigator.serviceWorker
-                    .register('service-worker.js')
-                    .then(function () {
-                        window.location.reload();
-                    });
-            } else {
-                init();
-            }
-        });
-    });
-} else {
-    init();
-}
-
-*/
-
 // attach Google fonts css
-(function (document, nodeType, existingNode, node) {
-    existingNode = document.getElementsByTagName(nodeType)[0];
-    node = document.createElement(nodeType);
-    node.rel = 'stylesheet';
-    node.href = 'https://fonts.googleapis.com/css?family=Amiri';
-    node.type = 'text/css';
-    existingNode.parentNode.insertBefore(node, existingNode);
-}(doc, 'link'));
+googleFonts('Amiri');
