@@ -8,7 +8,7 @@ import {SURA_AR, BISMILLAH_AR} from '../constants';
 import SvgBismillah from './svg-bismillah';
 
 export default class Sura extends Component{
-
+/*
     constructor() {
         super();
         this.state = {
@@ -28,11 +28,11 @@ export default class Sura extends Component{
         });
         this.componentDidMount();
     }
-
-    render(props, state){
+*/
+    render(props){
         const me = this;
-        //const sura = props.data;
-        const sura = me.state;
+        const sura = props.data;
+        //const sura = me.state;
 
         return (
             <article lang="ar">
@@ -70,7 +70,7 @@ export default class Sura extends Component{
             return aya.sura === 1 && aya.index === 1 ? accum : accum.concat(<Aya attr={aya} />);
         }, []);
     }
-
+/*
     stepState(){
         const me = this;
         const count = me.state.ayas.length + 50;
@@ -86,4 +86,5 @@ export default class Sura extends Component{
             window.requestAnimationFrame(me.stepState.bind(me));
         }
     }
+    */
 }

@@ -1,13 +1,12 @@
 import '../assets/styles/style.css';
 import './polyfills/object-assign';
 import FakePromise from 'promise-polyfill';
-//import 'whatwg-fetch';
+import ajax from './utils/ajax';
+import xml2json from './utils/xml2json';
 import {
     h,
     render
 } from 'preact';
-
-import fetchXml2Json from './utils/fetch-xml-json';
 import App from './components/app';
 import Router from './router';
 import googleFonts from './googlefonts';
@@ -74,10 +73,9 @@ function hidePreloader() {
 
 function init() {
     Promise.all([
-        fetchXml2Json('assets/data/quran-simple.xml'),
-        fetchXml2Json('assets/data/quran-data.xml')
+        ajax('assets/data/quran-simple.xml').then(xhr => xml2json(xhr.responseXML)),
+        ajax('assets/data/quran-data.xml').then(xhr => xml2json(xhr.responseXML))
     ]).then(function (responses) {
-
         store.dispatch({
             type: ACTION_LOAD,
             data: {

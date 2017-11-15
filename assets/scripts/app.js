@@ -304,6 +304,74 @@ var promise = createCommonjsModule(function (module) {
 })(commonjsGlobal);
 });
 
+var ajax = function (url, callback, _method, data) {
+    var method = _method && _method.toUpperCase() || 'GET';
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            return resolve(xhr);
+        };
+        xhr.onerror = function () {
+            return reject(xhr);
+        };
+        xhr.open(method, url, true);
+        xhr.send(data);
+    });
+};
+
+function xml2json(xml) {
+
+    var i, j, l, item, nodeName, attribute, old;
+
+    // Create the return object
+    var obj = Object.create(null);
+
+    if (xml.nodeType == 1) {
+        // element
+        // do attributes
+        if (xml.attributes.length > 0) {
+            for (j = 0, l = xml.attributes.length; j < l; j++) {
+                attribute = xml.attributes.item(j);
+                obj[attribute.nodeName] = attribute.nodeValue;
+            }
+        }
+    } else if (xml.nodeType == 3) {
+        // text
+        obj = Number(xml.nodeValue) || xml.nodeValue;
+    }
+
+    // loop children
+    if (xml.hasChildNodes()) {
+        l = xml.childNodes.length;
+        // If just one text node inside
+        if (l === 1 && xml.childNodes[0].nodeType === 3) {
+            obj = xml.childNodes[0].nodeValue;
+        } else {
+            for (i = 0; i < l; i++) {
+                item = xml.childNodes.item(i);
+                // ignore white space
+                if (item.nodeType === 3) {
+                    continue;
+                }
+                nodeName = item.nodeName;
+                if (typeof obj[nodeName] == "undefined") {
+                    obj[nodeName] = xml2json(item);
+                } else {
+                    if (typeof obj[nodeName].push == "undefined") {
+                        old = obj[nodeName];
+                        obj[nodeName] = [];
+                        obj[nodeName].push(old);
+                    }
+                    obj[nodeName].push(xml2json(item));
+                }
+            }
+        }
+    }
+
+    i = j = l = item = nodeName = attribute = old = null;
+    return obj;
+}
+
 /** Virtual DOM Node */
 function VNode() {}
 
@@ -1253,72 +1321,6 @@ function render(vnode, parent, merge) {
 
 //# sourceMappingURL=preact.esm.js.map
 
-function xml2json(xml) {
-
-    var i, j, l, item, nodeName, attribute, old;
-
-    // Create the return object
-    var obj = Object.create(null);
-
-    if (xml.nodeType == 1) {
-        // element
-        // do attributes
-        if (xml.attributes.length > 0) {
-            for (j = 0, l = xml.attributes.length; j < l; j++) {
-                attribute = xml.attributes.item(j);
-                obj[attribute.nodeName] = attribute.nodeValue;
-            }
-        }
-    } else if (xml.nodeType == 3) {
-        // text
-        obj = Number(xml.nodeValue) || xml.nodeValue;
-    }
-
-    // loop children
-    if (xml.hasChildNodes()) {
-        l = xml.childNodes.length;
-        // If just one text node inside
-        if (l === 1 && xml.childNodes[0].nodeType === 3) {
-            obj = xml.childNodes[0].nodeValue;
-        } else {
-            for (i = 0; i < l; i++) {
-                item = xml.childNodes.item(i);
-                // ignore white space
-                if (item.nodeType === 3) {
-                    continue;
-                }
-                nodeName = item.nodeName;
-                if (typeof obj[nodeName] == "undefined") {
-                    obj[nodeName] = xml2json(item);
-                } else {
-                    if (typeof obj[nodeName].push == "undefined") {
-                        old = obj[nodeName];
-                        obj[nodeName] = [];
-                        obj[nodeName].push(old);
-                    }
-                    obj[nodeName].push(xml2json(item));
-                }
-            }
-        }
-    }
-
-    i = j = l = item = nodeName = attribute = old = null;
-    return obj;
-}
-
-var fetchXml2Json = function (url) {
-    return fetch(url).then(function (response) {
-        if (!response.ok) {
-            throw new Error(response.status);
-        }
-        return response.text();
-    }).then(function (text) {
-        return new window.DOMParser().parseFromString(text, "text/xml");
-    }).then(function (xml) {
-        return xml2json(xml);
-    });
-};
-
 var TYPE_PAGE = 'page';
 var TYPE_SURA = 'sura';
 var ACTION_LOAD = 'LOAD';
@@ -2056,38 +2058,37 @@ var Sura = function (_Component) {
 
     function Sura() {
         classCallCheck(this, Sura);
-
-        var _this = possibleConstructorReturn(this, (Sura.__proto__ || Object.getPrototypeOf(Sura)).call(this));
-
-        _this.state = {
-            ayas: []
-        };
-        return _this;
+        return possibleConstructorReturn(this, (Sura.__proto__ || Object.getPrototypeOf(Sura)).apply(this, arguments));
     }
 
     createClass(Sura, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var me = this;
-            window.requestAnimationFrame(me.stepState.bind(me));
-        }
-
-        // before new props get accepted of already rendered
-
-    }, {
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps() {
-            this.setState({
-                ayas: []
-            });
-            this.componentDidMount();
-        }
-    }, {
         key: 'render',
-        value: function render$$1(props, state) {
+
+        /*
+            constructor() {
+                super();
+                this.state = {
+                    ayas: []
+                };
+            }
+        
+            componentDidMount(){
+                const me = this;
+                window.requestAnimationFrame(me.stepState.bind(me));
+            }
+        
+            // before new props get accepted of already rendered
+            componentWillReceiveProps() {
+                this.setState({
+                    ayas: []
+                });
+                this.componentDidMount();
+            }
+        */
+        value: function render$$1(props) {
             var me = this;
-            //const sura = props.data;
-            var sura = me.state;
+            var sura = props.data;
+            //const sura = me.state;
 
             return h(
                 'article',
@@ -2147,23 +2148,24 @@ var Sura = function (_Component) {
                 return aya.sura === 1 && aya.index === 1 ? accum : accum.concat(h(Aya, { attr: aya }));
             }, []);
         }
-    }, {
-        key: 'stepState',
-        value: function stepState() {
-            var me = this;
-            var count = me.state.ayas.length + 50;
-            var ayas = me.props.data.ayas || [];
-
-            me.setState(function (state, props) {
-                return Object.assign({}, me.props.data, {
-                    ayas: ayas.slice(0, count)
+        /*
+            stepState(){
+                const me = this;
+                const count = me.state.ayas.length + 50;
+                const ayas = me.props.data.ayas || [];
+        
+                me.setState(function(state, props){
+                    return Object.assign({}, me.props.data, {
+                        ayas: ayas.slice(0, count)
+                    });
                 });
-            });
-
-            if (count < ayas.length) {
-                window.requestAnimationFrame(me.stepState.bind(me));
+        
+                if(count < ayas.length){
+                    window.requestAnimationFrame(me.stepState.bind(me));
+                }
             }
-        }
+            */
+
     }]);
     return Sura;
 }(Component);
@@ -3382,8 +3384,11 @@ function hidePreloader() {
 }
 
 function init() {
-    Promise.all([fetchXml2Json('assets/data/quran-simple.xml'), fetchXml2Json('assets/data/quran-data.xml')]).then(function (responses) {
-
+    Promise.all([ajax('assets/data/quran-simple.xml').then(function (xhr) {
+        return xml2json(xhr.responseXML);
+    }), ajax('assets/data/quran-data.xml').then(function (xhr) {
+        return xml2json(xhr.responseXML);
+    })]).then(function (responses) {
         store.dispatch({
             type: ACTION_LOAD,
             data: {
