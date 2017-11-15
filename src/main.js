@@ -15,6 +15,7 @@ import {
     ACTION_GOTO_INDEX
 } from './constants';
 import store from './reducers/store';
+import registerServiceWorker from './registerServiceWorker';
 
 if (!window.Promise) {
    window.Promise = FakePromise;
@@ -66,12 +67,7 @@ store.subscribe(function () {
  * Router End
  * ******************************************* */
 
-function hidePreloader() {
-    app.removeAttribute('hidden');
-    doc.querySelector('.loader').setAttribute('hidden', true);
-}
-
-function init() {
+registerServiceWorker('service-worker.js', function init() {
     Promise.all([
         ajax('assets/data/quran-simple.xml').then(xhr => xml2json(xhr.responseXML)),
         ajax('assets/data/quran-data.xml').then(xhr => xml2json(xhr.responseXML))
@@ -84,14 +80,13 @@ function init() {
             }
         });
 
-        hidePreloader();
+        app.removeAttribute('hidden');
+        doc.querySelector('.loader').setAttribute('hidden', true);
 
     }, function (e) {
         console.log(e)
     });
-}
-
-init();
+});
 
 // attach Google fonts css
 googleFonts('Amiri');

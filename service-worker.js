@@ -1,13 +1,11 @@
-var CACHE_NAME = 'cache-quran-v1';
+var CACHE_NAME = 'cache-quran-v1.0.3';
 var urlsToCache = [
-  '/quran/',
   'index.html',
-  'assets/scripts/app.js',
-  'assets/scripts/web-worker.js',
+  'assets/scripts/app.min.js',
+  'assets/scripts/web-worker.min.js',
   'assets/data/quran-data.xml',
   'assets/data/quran-simple.xml'
 ];
-
 // INSTALL
 self.addEventListener('install', function (event) {
   event.waitUntil(

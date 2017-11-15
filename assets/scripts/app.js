@@ -3332,6 +3332,33 @@ store.subscribe(function () {
     }
 });
 
+var registerServiceWorker = function (swjs, init) {
+    var serviceWorker = navigator.serviceWorker;
+    init = init || function () {};
+
+    if (serviceWorker) {
+        window.addEventListener('load', function () {
+            "use strict";
+
+            serviceWorker.getRegistration().then(function (registration) {
+                //if (registration && registration.active) {
+                //registration.unregister()
+                //}
+                console.log(swjs);
+                if (!registration || !serviceWorker.controller) {
+                    serviceWorker.register(swjs).then(function () {
+                        //window.location.reload();
+                    });
+                } else {
+                    init();
+                }
+            });
+        });
+    } else {
+        init();
+    }
+};
+
 if (!window.Promise) {
     window.Promise = promise;
 }
@@ -3378,12 +3405,7 @@ store.subscribe(function () {
  * Router End
  * ******************************************* */
 
-function hidePreloader() {
-    app.removeAttribute('hidden');
-    doc.querySelector('.loader').setAttribute('hidden', true);
-}
-
-function init() {
+registerServiceWorker('service-worker.js', function init() {
     Promise.all([ajax('assets/data/quran-simple.xml').then(function (xhr) {
         return xml2json(xhr.responseXML);
     }), ajax('assets/data/quran-data.xml').then(function (xhr) {
@@ -3397,13 +3419,12 @@ function init() {
             }
         });
 
-        hidePreloader();
+        app.removeAttribute('hidden');
+        doc.querySelector('.loader').setAttribute('hidden', true);
     }, function (e) {
         console.log(e);
     });
-}
-
-init();
+});
 
 // attach Google fonts css
 googleFonts('Amiri');
