@@ -1,6 +1,7 @@
 {
     "name": "Qur'an",
     "short_name": "Qur'an",
+    "description": "The app that helps you find the best food in town!",
     "icons": [{
         "src": "assets/images/icons/icon-128x128.png",
         "sizes": "128x128",
@@ -26,13 +27,13 @@
         "sizes": "512x512",
         "type": "image/png"
     }, {
-        "src": "assets/images/icons/icon-1024x1025.png",
+        "src": "assets/images/icons/icon-1024x1024.png",
         "sizes": "1024x1024",
         "type": "image/png"
     }],
     "start_url": "index.html",
     "display": "standalone",
-    "background_color": "#3E4EB8",
-    "theme_color": "#2F3BA2",
-    "orientation": "portrait"
+    "background_color": "#412914",
+    "theme_color": "#FDF9F0",
+    "orientation": "portrait-primary"
 }
