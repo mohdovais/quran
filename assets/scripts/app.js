@@ -29,8 +29,6 @@ if (typeof Object.assign != 'function') {
     Object.defineProperty(Object, "assign", {
         value: function assign(target, varArgs) {
             // .length of function is 2
-            'use strict';
-
             if (target == null) {
                 // TypeError if undefined or null
                 throw new TypeError('Cannot convert undefined or null to object');
@@ -58,11 +56,58 @@ if (typeof Object.assign != 'function') {
     });
 }
 
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+if (!Array.prototype.find) {
+    Object.defineProperty(Array.prototype, 'find', {
+        value: function value(predicate) {
+            // 1. Let O be ? ToObject(this value).
+            if (this == null) {
+                throw new TypeError('"this" is null or not defined');
+            }
+
+            var o = Object(this);
+
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            var len = o.length >>> 0;
+
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+            if (typeof predicate !== 'function') {
+                throw new TypeError('predicate must be a function');
+            }
+
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            var thisArg = arguments[1];
+
+            // 5. Let k be 0.
+            var k = 0;
+
+            // 6. Repeat, while k < len
+            while (k < len) {
+                // a. Let Pk be ! ToString(k).
+                // b. Let kValue be ? Get(O, Pk).
+                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                // d. If testResult is true, return kValue.
+                var kValue = o[k];
+                if (predicate.call(thisArg, kValue, k, o)) {
+                    return kValue;
+                }
+                // e. Increase k by 1.
+                k++;
+            }
+
+            // 7. Return undefined.
+            return undefined;
+        }
+    });
+}
+
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 
 
-
+function unwrapExports (x) {
+	return x && x.__esModule ? x['default'] : x;
+}
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -476,6 +521,7 @@ function extend(obj, props) {
  */
 var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
 
+// DOM properties that should NOT have "px" added when numeric
 var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
 /** Managed queue of dirty components to be re-rendered */
@@ -1318,9 +1364,6 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
-
-//# sourceMappingURL=preact.esm.js.map
-
 var TYPE_PAGE = 'page';
 var TYPE_SURA = 'sura';
 var ACTION_LOAD = 'LOAD';
@@ -1341,123 +1384,6 @@ function gotoIndex(type, index) {
         }
     };
 }
-
-var asyncGenerator = function () {
-  function AwaitValue(value) {
-    this.value = value;
-  }
-
-  function AsyncGenerator(gen) {
-    var front, back;
-
-    function send(key, arg) {
-      return new Promise(function (resolve, reject) {
-        var request = {
-          key: key,
-          arg: arg,
-          resolve: resolve,
-          reject: reject,
-          next: null
-        };
-
-        if (back) {
-          back = back.next = request;
-        } else {
-          front = back = request;
-          resume(key, arg);
-        }
-      });
-    }
-
-    function resume(key, arg) {
-      try {
-        var result = gen[key](arg);
-        var value = result.value;
-
-        if (value instanceof AwaitValue) {
-          Promise.resolve(value.value).then(function (arg) {
-            resume("next", arg);
-          }, function (arg) {
-            resume("throw", arg);
-          });
-        } else {
-          settle(result.done ? "return" : "normal", result.value);
-        }
-      } catch (err) {
-        settle("throw", err);
-      }
-    }
-
-    function settle(type, value) {
-      switch (type) {
-        case "return":
-          front.resolve({
-            value: value,
-            done: true
-          });
-          break;
-
-        case "throw":
-          front.reject(value);
-          break;
-
-        default:
-          front.resolve({
-            value: value,
-            done: false
-          });
-          break;
-      }
-
-      front = front.next;
-
-      if (front) {
-        resume(front.key, front.arg);
-      } else {
-        back = null;
-      }
-    }
-
-    this._invoke = send;
-
-    if (typeof gen.return !== "function") {
-      this.return = undefined;
-    }
-  }
-
-  if (typeof Symbol === "function" && Symbol.asyncIterator) {
-    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
-      return this;
-    };
-  }
-
-  AsyncGenerator.prototype.next = function (arg) {
-    return this._invoke("next", arg);
-  };
-
-  AsyncGenerator.prototype.throw = function (arg) {
-    return this._invoke("throw", arg);
-  };
-
-  AsyncGenerator.prototype.return = function (arg) {
-    return this._invoke("return", arg);
-  };
-
-  return {
-    wrap: function (fn) {
-      return function () {
-        return new AsyncGenerator(fn.apply(this, arguments));
-      };
-    },
-    await: function (value) {
-      return new AwaitValue(value);
-    }
-  };
-}();
-
-
-
-
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -2682,14 +2608,14 @@ var global$1 = typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :
             typeof window !== "undefined" ? window : {};
 
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
+if (typeof global$1.setTimeout === 'function') {
+    
 }
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
+if (typeof global$1.clearTimeout === 'function') {
+    
+}
+
+
 
 
 
@@ -2715,16 +2641,31 @@ Item.prototype.run = function () {
 
 
 // from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
+var performance = global$1.performance || {};
+var performanceNow =
+  performance.now        ||
+  performance.mozNow     ||
+  performance.msNow      ||
+  performance.oNow       ||
+  performance.webkitNow  ||
+  function(){ return (new Date()).getTime() };
 
+// generate timestamp or delta
+// see http://nodejs.org/api/process.html#process_process_hrtime
+
+/** Detect free variable `global` from Node.js. */
 var freeGlobal = typeof global$1 == 'object' && global$1 && global$1.Object === Object && global$1;
 
+/** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
 
 /** Used as a reference to the global object. */
 var root = freeGlobal || freeSelf || Function('return this')();
 
+/** Built-in value references. */
 var Symbol$1 = root.Symbol;
 
+/** Used for built-in method references. */
 var objectProto$1 = Object.prototype;
 
 /** Used to check objects for own properties. */
@@ -2788,6 +2729,7 @@ function objectToString(value) {
   return nativeObjectToString$1.call(value);
 }
 
+/** `Object#toString` result references. */
 var nullTag = '[object Null]';
 var undefinedTag = '[object Undefined]';
 
@@ -2824,6 +2766,7 @@ function overArg(func, transform) {
   };
 }
 
+/** Built-in value references. */
 var getPrototype = overArg(Object.getPrototypeOf, Object);
 
 /**
@@ -2854,6 +2797,7 @@ function isObjectLike(value) {
   return value != null && typeof value == 'object';
 }
 
+/** `Object#toString` result references. */
 var objectTag = '[object Object]';
 
 /** Used for built-in method references. */
@@ -2911,8 +2855,6 @@ function isPlainObject(value) {
 }
 
 var ponyfill = createCommonjsModule(function (module, exports) {
-'use strict';
-
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -2936,9 +2878,9 @@ function symbolObservablePonyfill(root) {
 }
 });
 
-var lib = createCommonjsModule(function (module, exports) {
-'use strict';
+unwrapExports(ponyfill);
 
+var lib = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -2966,8 +2908,16 @@ var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
 });
 
+unwrapExports(lib);
+
 var symbolObservable = lib;
 
+/**
+ * These are private action types reserved by Redux.
+ * For any unknown actions, you must return the current state.
+ * If the current state is undefined, you must return the initial state.
+ * Do not reference these action types directly in your code.
+ */
 var ActionTypes = {
   INIT: '@@redux/INIT'
 
@@ -3265,6 +3215,22 @@ function compose() {
 
 var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+/**
+ * Creates a store enhancer that applies middleware to the dispatch method
+ * of the Redux store. This is handy for a variety of tasks, such as expressing
+ * asynchronous actions in a concise manner, or logging every action payload.
+ *
+ * See `redux-thunk` package as an example of the Redux middleware.
+ *
+ * Because middleware is potentially asynchronous, this should be the first
+ * store enhancer in the composition chain.
+ *
+ * Note that each middleware will be given the `dispatch` and `getState` functions
+ * as named arguments.
+ *
+ * @param {...Function} middlewares The middleware chain to be applied.
+ * @returns {Function} A store enhancer applying the middleware.
+ */
 function applyMiddleware() {
   for (var _len = arguments.length, middlewares = Array(_len), _key = 0; _key < _len; _key++) {
     middlewares[_key] = arguments[_key];
@@ -3294,6 +3260,10 @@ function applyMiddleware() {
   };
 }
 
+/*
+* This is a dummy function to check if the function name has been altered by minification.
+* If the function has been minified and NODE_ENV !== 'production', warn the user.
+*/
 function isCrushed() {}
 
 if ("development" !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
@@ -3338,16 +3308,15 @@ var registerServiceWorker = function (swjs, init) {
 
     if (serviceWorker) {
         window.addEventListener('load', function () {
-            "use strict";
-
             serviceWorker.getRegistration().then(function (registration) {
                 //if (registration && registration.active) {
                 //registration.unregister()
                 //}
-                console.log(swjs);
                 if (!registration || !serviceWorker.controller) {
                     serviceWorker.register(swjs).then(function () {
-                        //window.location.reload();
+                        window.location.reload();
+                    }).catch(function () {
+                        init();
                     });
                 } else {
                     init();

@@ -14,9 +14,9 @@ export default function (swjs, init) {
                     if (!registration || !serviceWorker.controller) {
                         serviceWorker
                             .register(swjs)
-                            .then(function (reg) {
+                            .then(function () {
                                 window.location.reload();
-                            }).catch(function(error){
+                            }).catch(function(){
                                 init();
                             });
                     } else {

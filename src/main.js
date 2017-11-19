@@ -1,5 +1,6 @@
 import '../assets/styles/style.css';
 import './polyfills/object-assign';
+import './polyfills/array-find';
 import FakePromise from 'promise-polyfill';
 import ajax from './utils/ajax';
 import xml2json from './utils/xml2json';
