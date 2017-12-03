@@ -2,6 +2,7 @@
   "name": "learnpreact",
   "version": "1.0.0",
   "description": "Quran reader with offline support",
+  "repository": "",
   "main": "index.js",
   "scripts": {
     "build": "node build.js",
@@ -12,14 +13,17 @@
   "dependencies": {
     "preact": "^8.2.5",
     "promise-polyfill": "6.0.2",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "rxjs-es": "^5.0.0-beta.12"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-module-resolver": "^3.0.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-0": "^6.24.1",
+    "html-minifier": "^3.5.6",
     "rollup": "^0.51.7",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.1",

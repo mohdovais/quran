@@ -1,6 +1,6 @@
-import getSura from './getSura';
-import getPage from './getPage';
-import {TYPE_PAGE, TYPE_SURA} from '../../constants';
+import getSura from './get-sura';
+import getPage from './get-page';
+import {TYPE_PAGE, TYPE_SURA} from '../constants';
 
 export default function (type, index, source) {
     switch (type) {

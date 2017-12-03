@@ -3,31 +3,51 @@ import './polyfills/object-assign';
 import './polyfills/array-find';
 import FakePromise from 'promise-polyfill';
 import ajax from './utils/ajax';
-import xml2json from './utils/xml2json';
 import {
     h,
     render
 } from 'preact';
 import App from './components/app';
 import Router from './router';
-import googleFonts from './googlefonts';
+import googleFonts from './google-fonts';
 import {
     ACTION_LOAD,
     ACTION_GOTO_INDEX
 } from './constants';
 import store from './reducers/store';
 import registerServiceWorker from './registerServiceWorker';
+import parseQuran from './web-worker/prepare';
+import observeStore from './reducers/observe-store';
+import objectEquals from './utils/object/equals';
 
 if (!window.Promise) {
    window.Promise = FakePromise;
 }
 
-const doc = document;
 
+const doc = document;
 
 const app = render(h(App, {
     store: store
 }), doc.body, doc.getElementById('app'));
+
+registerServiceWorker('service-worker.js', function init() {
+    ajax('assets/data/quran-simple.txt').then(function(xhr){
+        store.dispatch({
+            type: ACTION_LOAD,
+            data: {
+                quran: parseQuran(xhr.response)
+            }
+        });
+
+        app.removeAttribute('hidden');
+        doc.querySelector('.loader').setAttribute('hidden', true);
+
+    }, function (e) {
+        console.log(e)
+    });
+});
+
 
 /* *********************************************
  * Router Config Start
@@ -51,7 +71,7 @@ const router = new Router({
                 });
             }
         } else {
-            this.redirectTo(`${type}/1`);
+            router.redirectTo(`${type}/1`);
         }
     },
     'sura\/(\\d+)\/aya\/(\\d+)': function (sura, aya) {
@@ -59,8 +79,14 @@ const router = new Router({
     }
 }).execute();
 
-store.subscribe(function () {
-    const state = store.getState();
+observeStore(store, function(store, oldState){
+    const storeState = store.getState();
+    const newState = {
+        pageIndex: storeState.pageIndex,
+        pageType: storeState.pageType
+    }
+    return objectEquals(oldState, newState) ? oldState : newState;
+}, function(state){
     router.redirectTo(`${state.pageType}/${state.pageIndex}`);
 });
 
@@ -68,26 +94,6 @@ store.subscribe(function () {
  * Router End
  * ******************************************* */
 
-registerServiceWorker('service-worker.js', function init() {
-    Promise.all([
-        ajax('assets/data/quran-simple.xml').then(xhr => xml2json(xhr.responseXML)),
-        ajax('assets/data/quran-data.xml').then(xhr => xml2json(xhr.responseXML))
-    ]).then(function (responses) {
-        store.dispatch({
-            type: ACTION_LOAD,
-            data: {
-                quran: responses[0].quran.sura,
-                meta: responses[1].quran
-            }
-        });
-
-        app.removeAttribute('hidden');
-        doc.querySelector('.loader').setAttribute('hidden', true);
-
-    }, function (e) {
-        console.log(e)
-    });
-});
 
 // attach Google fonts css
 googleFonts('Amiri');

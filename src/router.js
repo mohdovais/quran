@@ -1,9 +1,10 @@
 export default class Router{
 
     constructor(routes){
-        this.routes = {};
-        this.addRoutes(routes);
-        window.addEventListener('hashchange', this.onHashChange.bind(this));
+        const me = this;
+        me.routes = {};
+        me.addRoutes(routes);
+        window.addEventListener('hashchange', me.onHashChange.bind(me));
     }
 
     addRoutes(_routes){
@@ -47,9 +48,10 @@ export default class Router{
     }
 
     getRouteMatch(hash){
+        const routes = this.routes;
         let i, match, route;
-        for(i in this.routes){
-            route = this.routes[i];
+        for(i in routes){
+            route = routes[i];
             match = route.regex.exec(hash);
             if(match){
                 return {
@@ -66,6 +68,10 @@ export default class Router{
 
     redirectTo(route){
         window.location = `#${route}`;
+    }
+
+    then(fn){
+        fn()
     }
 
 }

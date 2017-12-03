@@ -1,5 +1,5 @@
-import prepare from '../utils/quran/prepare';
-import getVerse from '../utils/quran/getVerse';
+//import prepare from './prepare';
+import getVerse from './get-verse';
 import {ACTION_LOAD, ACTION_GOTO_INDEX} from '../constants';
 
 export default function (e) {
@@ -10,18 +10,18 @@ export default function (e) {
         data = message.data;
 
     switch (message.action) {
-        case ACTION_LOAD:
+        /*case ACTION_LOAD:
             worker.postMessage({
                 messageId: messageId,
                 type: message.action,
                 data: prepare(data)
             });
-            break;
+            break;*/
         case ACTION_GOTO_INDEX:
             worker.postMessage({
                 messageId: messageId,
                 type: message.action,
-                data: getVerse(data.type, data.index, data.source)
+                data: getVerse(data.type, data.index, data.quran)
             });
             break;
         default:

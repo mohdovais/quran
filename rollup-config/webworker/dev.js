@@ -5,7 +5,7 @@ import resolve from "rollup-plugin-node-resolve";
 import commonjs from 'rollup-plugin-commonjs';
 
 export default {
-    input: "src/webWorker/main.js",
+    input: "src/web-worker/main.js",
     output: {
         file: "assets/scripts/web-worker.js",
         format: "iife"
@@ -27,10 +27,7 @@ export default {
                 "stage-0"
             ],
             plugins: [
-                "external-helpers",
-                ["transform-react-jsx", {
-                    "pragma": "h"
-                }]
+                "external-helpers"
             ]
         }),
         commonjs(),

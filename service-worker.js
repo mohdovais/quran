@@ -35,14 +35,13 @@ var onFetch = function (event) {
     );
 };
 
-self.CACHE_NAME = "1511126924007";
+self.CACHE_NAME = "1512322937115";
 
 self.urlsToCache = [
   'index.html',
   'assets/scripts/app.min.js',
   'assets/scripts/web-worker.min.js',
-  'assets/data/quran-data.xml',
-  'assets/data/quran-simple.xml'
+  'assets/data/quran-simple.txt'
 ];
 
 // INSTALL

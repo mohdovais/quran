@@ -7,10 +7,7 @@ import capitalize from '../utils/capitalize';
 
 const initialState = {
     lastPropertyChanged: null,
-    source: {
-        quran: [],
-        meta: {}
-    },
+    quran: {},
     dispalyTypes: [{
         text: capitalize(TYPE_SURA),
         value: TYPE_SURA

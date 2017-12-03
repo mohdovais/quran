@@ -16,7 +16,7 @@ store.subscribe(function () {
     const state = store.getState();
 
     switch (state.lastPropertyChanged) {
-        case 'source':
+        case 'quran':
             store.dispatch({
                 type: ACTION_PAGING_OPTIONS
             });

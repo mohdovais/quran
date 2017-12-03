@@ -1,7 +1,10 @@
 CACHE MANIFEST
-# Sun Nov 19 2017 21:28:44 GMT+0000 (GMT)
+# Sun Dec 03 2017 17:42:17 GMT+0000 (GMT)
 index.html
 assets/scripts/app.min.js
 assets/scripts/web-worker.min.js
-assets/data/quran-data.xml
-assets/data/quran-simple.xml
+assets/data/quran-simple.txt
+
+# Use from network if available
+NETWORK:
+*

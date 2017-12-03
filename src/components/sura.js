@@ -8,38 +8,21 @@ import {SURA_AR, BISMILLAH_AR} from '../constants';
 import SvgBismillah from './svg-bismillah';
 
 export default class Sura extends Component{
-/*
-    constructor() {
-        super();
-        this.state = {
-            ayas: []
-        };
-    }
 
-    componentDidMount(){
-        const me = this;
-        window.requestAnimationFrame(me.stepState.bind(me));
-    }
-
-    // before new props get accepted of already rendered
-    componentWillReceiveProps() {
-        this.setState({
-            ayas: []
-        });
-        this.componentDidMount();
-    }
-*/
     render(props){
-        const me = this;
         const sura = props.data;
-        //const sura = me.state;
 
-        return (
-            <article lang="ar">
-                {me.getHeader(sura)}
-                {me.getVerse(sura.ayas)}
-            </article>
-        )
+        if(sura){
+            return (
+                <article lang="ar">
+                    {this.getHeader(sura)}
+                    {this.getVerse(sura.ayas)}
+                </article>
+            )
+        }else{
+            return <article lang="ar" />
+        }
+
     }
 
     getHeader(sura){

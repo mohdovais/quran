@@ -1,4 +1,7 @@
-import {h, Component} from 'preact';
+import {
+    h,
+    Component
+} from 'preact';
 import Header from './header';
 import Content from './content';
 import Footer from './next-back';
@@ -14,5 +17,4 @@ export default class App extends Component{
             </section>
         );
     }
-
 }

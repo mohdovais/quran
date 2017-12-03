@@ -1,57 +1,9 @@
 (function () {
 'use strict';
 
-function AyaMap(aya) {
-    return {
-        index: parseInt(aya.index, 10),
-        sura: parseInt(this.index, 10),
-        text: aya.text,
-        bismillah: aya.bismillah || false
-    };
-}
-
-function chaptersReducer(accum, sura) {
-    var aya = sura.aya || [];
-    return accum.concat(aya.map(AyaMap, sura));
-}
-
-var prepare = function (data) {
-    var p = 1;
-    var r = 1;
-    var meta = data.meta;
-    var quran = data.quran.reduce(chaptersReducer, []).map(function (aya, index, array) {
-        var nextAya = array[index + 1];
-        var page = meta.pages.page[p];
-        var ruku = meta.rukus.ruku[r];
-        var isRuku = false;
-        var sajda = meta.sajdas.sajda.find(function (s) {
-            return s.sura == aya.sura && s.aya == aya.index;
-        });
-
-        if (page && aya.sura == page.sura && aya.index == page.aya) {
-            p++;
-        }
-
-        if (ruku && nextAya.sura == ruku.sura && nextAya.index == ruku.aya) {
-            isRuku = parseInt(ruku.index, 10);
-            r++;
-        }
-
-        return Object.assign(Object.create(null), {
-            page: p,
-            sajda: sajda && sajda.type || false,
-            ruku: isRuku
-        }, aya);
-    });
-
-    return {
-        quran: quran,
-        meta: meta
-    };
-};
-
-var getSura = function (source, suraIndex) {
-    var hasSource = source.quran.length > 0;
+/*
+export default function (source, suraIndex) {
+    const hasSource = source.quran.length > 0;
     var suraList, chapter;
 
     if (hasSource) {
@@ -65,6 +17,11 @@ var getSura = function (source, suraIndex) {
     }
 
     return [];
+}
+*/
+var getSura = function (quran, suraIndex) {
+    var sura = quran.Sura || [];
+    return [sura[suraIndex]] || [];
 };
 
 var getObjectProperty = function (obj, property) {
@@ -73,30 +30,56 @@ var getObjectProperty = function (obj, property) {
     }, obj);
 };
 
-function getPage(source, index) {
-    var chapters = [];
-    var suras = getObjectProperty(source, 'meta.suras.sura');
-    var groups = source.quran.filter(function (aya) {
-        return aya.page === index;
-    }).reduce(function (accum, item) {
-        var ayas = accum[item.sura] || [];
-        ayas.push(item);
-        accum[item.sura] = ayas;
-        return accum;
-    }, {});
+function getSuraAyas(Sura, start, end) {
+    var i = start[0],
+        j = start[1] - 1,
+        s2 = end[0],
+        p2 = end[1] - 1,
+        response = [],
+        ayas,
+        aya;
 
-    for (var suraIndex in groups) {
-        chapters.push(Object.assign({}, suras[suraIndex - 1], {
-            ayas: groups[suraIndex]
-        }));
+    for (; i <= s2; i++) {
+        aya = Sura[i].ayas[j];
+        ayas = [];
+        while (aya) {
+            if (aya === Sura[s2].ayas[p2]) {
+                break;
+            } else {
+                ayas.push(aya);
+                j++;
+                aya = Sura[i].ayas[j];
+            }
+        }
+
+        if (ayas.length > 0) {
+            response.push(Object.assign({}, Sura[i], {
+                ayas: ayas
+            }));
+        }
+
+        j = 0;
     }
 
-    return chapters;
+    return response;
+}
+
+function getPage(Quran, i) {
+    var pages = getObjectProperty(Quran, 'Page') || [],
+        suras = getObjectProperty(Quran, 'Sura') || [],
+        start = pages[i],
+        end = pages[i + 1];
+
+    if (start && end) {
+        return getSuraAyas(suras, start, end);
+    } else {
+        return [];
+    }
 }
 
 var TYPE_PAGE = 'page';
 var TYPE_SURA = 'sura';
-var ACTION_LOAD = 'LOAD';
+
 var ACTION_GOTO_INDEX = 'GOTO_INDEX';
 
 var getVerse = function (type, index, source) {
@@ -110,6 +93,7 @@ var getVerse = function (type, index, source) {
     }
 };
 
+//import prepare from './prepare';
 var onMessage = function (e) {
     var worker = e.target,
         eData = e.data,
@@ -118,18 +102,18 @@ var onMessage = function (e) {
         data = message.data;
 
     switch (message.action) {
-        case ACTION_LOAD:
+        /*case ACTION_LOAD:
             worker.postMessage({
                 messageId: messageId,
                 type: message.action,
                 data: prepare(data)
             });
-            break;
+            break;*/
         case ACTION_GOTO_INDEX:
             worker.postMessage({
                 messageId: messageId,
                 type: message.action,
-                data: getVerse(data.type, data.index, data.source)
+                data: getVerse(data.type, data.index, data.quran)
             });
             break;
         default:

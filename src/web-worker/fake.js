@@ -1,4 +1,4 @@
-import onMessageThread from './onMessage';
+import onMessageThread from './on-message';
 
 function FakeWebWorker() {}
 

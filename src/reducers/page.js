@@ -36,7 +36,7 @@ function getChapters(index, source) {
 
 export default function reducerPage(currentState, action) {
     const index = action.data.index === undefined ? 1 : parseInt(action.data.index, 10);
-    const maxPages = getObjectProperty(currentState, 'source.meta.pages.page.length');
+    const maxPages = getObjectProperty(currentState, 'source.meta.pages.page.length') - 2;
     return Object.assign({}, currentState, {
         display: Object.assign({}, currentState.display, {
             type: TYPE_PAGE,

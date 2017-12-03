@@ -1,7 +1,7 @@
-import pagingReducer from './pagingOptions';
+import pagingReducer from './paging-options';
 import hasOwnProperty from '../utils/object/hasOwnProperty';
 import WebWorkerPromise from '../utils/webWorkerPromise';
-import FakeWebWorker from '../webworker/fake.js'
+import FakeWebWorker from '../web-worker/fake.js'
 import copy from '../utils/object/extend';
 import {
     ACTION_LOAD,
@@ -11,7 +11,7 @@ import {
     ACTION_APPLY
 } from '../constants';
 
-const worker = window.Worker ? new Worker('assets/scripts/web-worker.min.js') : new FakeWebWorker();
+const worker = window.Worker ? new Worker('assets/scripts/web-worker.js') : new FakeWebWorker();
 const workerPromise = new WebWorkerPromise(worker);
 
 export default function (args) {
@@ -33,7 +33,7 @@ export default function (args) {
                         data: {
                             type: actionData.type,
                             index: actionData.index,
-                            source: currentState.source
+                            quran: currentState.quran
                         }
                     })
                     .then(function (data) {
@@ -50,20 +50,13 @@ export default function (args) {
                 break;
 
             case ACTION_LOAD:
-                workerPromise
-                    .postMessage({
-                        action: ACTION_LOAD,
-                        data: actionData
-                    })
-                    .then(function (data) {
-                        next({
-                            type: ACTION_APPLY,
-                            data: {
-                                lastPropertyChanged: 'source',
-                                source: data
-                            }
+                    next({
+                        type: ACTION_APPLY,
+                        data: copy(actionData, {
+                            lastPropertyChanged: 'quran',
                         })
-                    });
+                    })
+
                 break;
 
             case ACTION_PAGING_OPTIONS:

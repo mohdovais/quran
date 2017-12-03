@@ -11,17 +11,13 @@ export default function (swjs, init) {
                     //if (registration && registration.active) {
                         //registration.unregister()
                     //}
-                    if (!registration || !serviceWorker.controller) {
-                        serviceWorker
-                            .register(swjs)
-                            .then(function () {
-                                window.location.reload();
-                            }).catch(function(){
-                                init();
-                            });
-                    } else {
+                    serviceWorker.register(swjs)
+                    .then(function () {
+                        //window.location.reload();
                         init();
-                    }
+                    }).catch(function(){
+                        init();
+                    });
                 });
         });
     } else {

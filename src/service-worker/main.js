@@ -8,8 +8,7 @@ self.urlsToCache = [
   'index.html',
   'assets/scripts/app.min.js',
   'assets/scripts/web-worker.min.js',
-  'assets/data/quran-data.xml',
-  'assets/data/quran-simple.xml'
+  'assets/data/quran-simple.txt'
 ];
 
 // INSTALL

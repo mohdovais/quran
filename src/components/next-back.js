@@ -5,38 +5,29 @@ import {
 import capitalize from '../utils/capitalize';
 import {SURA_AR} from '../constants';
 import {ACTION_GOTO_INDEX} from '../constants';
+import observerStore from '../reducers/observe-store';
+import objectEquals from '../utils/object/equals';
 
 export default class extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.getStoreState(props.store);
+        this.unsubscribe = observerStore(props.store, this.reducer.bind(this), this.setState.bind(this));
     }
 
-    // after the component gets mounted to the DOM
-    componentDidMount() {
-        const me = this,
-            store = me.props.store;
-
-        me.unsubscribe = store && store.subscribe(() => {
-            const newState = me.getStoreState(store);
-            me.setState(function (prevState, props) {
-                return newState;
-            });
-        })
-    }
-
-    getStoreState(store) {
-        const storeState = store && store.getState() || {};
-        const chapters = storeState.pageChapters.map(function (pageChapter) {
-            return pageChapter.chapter;
-        });
-        return {
-            index: storeState.pageIndex || 0,
+    getStateFromStore(store) {
+        const storeState = store.getState();
+        return Object.assign(Object.create(null), {
+            index: storeState.pageIndex,
             max: storeState.pagingOptions.length,
             type: storeState.pageType,
             chapters: storeState.pageChapters
-        }
+        });
+    }
+
+    reducer(store, oldState){
+        const newState = this.getStateFromStore(store);
+        return objectEquals(newState, oldState) ? oldState : newState;
     }
 
     gotoIndex(index, event) {
@@ -63,13 +54,13 @@ export default class extends Component {
 
     render() {
         const me = this;
-        const state = this.state;
+        const state = me.state;
         const max = state.max;
         const index = state.index;
         const chapters = state.chapters
             .map(function (chapter) {
                 //https://stackoverflow.com/questions/29988144/concat-rtl-string-with-ltr-string-in-javascript
-                return  '\u202B' + SURA_AR + ' ' + chapter.name + '\u202C';
+                return  chapter ? '\u202B' + SURA_AR + ' ' + chapter.name + '\u202C' : '';
             })
             .join(', ');
 
@@ -85,6 +76,8 @@ export default class extends Component {
 
     // prior to removal from the DOM
     componentWillUnmount() {
-        this.unsubscribe && this.unsubscribe();
+        if(this.unsubscribe){
+            this.unsubscribe();
+        }
     }
 }

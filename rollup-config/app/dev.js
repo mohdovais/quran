@@ -13,7 +13,7 @@ export default {
     },
     plugins: [
         postcss({
-            extensions: [ '.css' ],
+            extensions: ['.css'],
         }),
         babel({
             babelrc: false,
@@ -28,7 +28,7 @@ export default {
                 "stage-0"
             ],
             plugins: [
-                "external-helpers", 
+                "external-helpers",
                 ["transform-react-jsx", {
                     "pragma": "h"
                 }]

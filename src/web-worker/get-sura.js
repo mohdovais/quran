@@ -1,3 +1,4 @@
+/*
 export default function (source, suraIndex) {
     const hasSource = source.quran.length > 0;
     var suraList, chapter;
@@ -13,4 +14,9 @@ export default function (source, suraIndex) {
     }
 
     return [];
+}
+*/
+export default function(quran, suraIndex){
+    const sura = quran.Sura || [];
+    return [sura[suraIndex]] || [];
 }
