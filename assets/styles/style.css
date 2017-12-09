@@ -12,6 +12,7 @@ article {
     line-height: 2.5em;
     font-size: 1.5em;
     padding: 1em;
+    text-align: justify;
 }
 
 article header {
@@ -52,7 +53,7 @@ article header h3 {
 }
 
 .verse-count{
-    margin: 0 1em;
+    margin: 0 0.5em;
     font-family: serif;
 }
 
