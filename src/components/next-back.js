@@ -7,6 +7,7 @@ import {SURA_AR} from '../constants';
 import {ACTION_GOTO_INDEX} from '../constants';
 import observerStore from '../reducers/observe-store';
 import objectEquals from '../utils/object/equals';
+import Filter from './filter';
 
 export default class extends Component {
 
@@ -64,12 +65,20 @@ export default class extends Component {
             })
             .join(', ');
 
+            //<span lang="ar">{chapters}</span>
+            //<div class="text">{capitalize(state.type)} {index} of {max} <div>{chapters}</div></div>
+
         return (
             <nav class="nav">
-                <span lang="ar">{chapters}</span>
-                <button class="prev" disabled={index < 2} onClick={me.previous.bind(me)}>&#9001; Previous</button>
-                <span class="text">{capitalize(state.type)} {index} of {max}</span>
-                <button class="next" disabled={index >= max} onClick={me.next.bind(me)}>Next &#9002;</button>
+                <button class="next" disabled={index >= max} onClick={me.next.bind(me)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20"><path d="M10,0l2,2l-8,8l8,8l-2,2L0,10L10,0z" fill="#007aff" /></svg>
+                    <span>Next</span>
+                </button>
+                <button class="prev" disabled={index < 2} onClick={me.previous.bind(me)}>
+                    <span>Previous</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20"><path d="M 2,0 0,2 8,10 0,18 2,20 12,10 2,0 Z" fill="#007aff" /></svg>
+                </button>
+                <Filter store={me.props.store} />
             </nav>
         )
     }

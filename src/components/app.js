@@ -4,7 +4,7 @@ import {
 } from 'preact';
 import Header from './header';
 import Content from './content';
-import Footer from './next-back';
+import Footer from './footer';
 
 export default class App extends Component{
     render(){

@@ -15,7 +15,7 @@ function getSuraTypeOptions(suraList) {
         return !!page.name
     }).map(page => {
         return {
-            text: `${page.name} ${page.tname}`,
+            text: `${page.tname} ${page.name}`,
             value: page.index
         }
     });

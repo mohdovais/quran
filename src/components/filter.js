@@ -1,6 +1,9 @@
 import {h, Component} from 'preact';
 import {gotoIndex} from '../reducers/actions';
 import {ACTION_CHANGE_TYPE} from '../constants';
+import Select from './resizable-select';
+
+
 
 export default class Filter extends Component {
 
@@ -44,6 +47,7 @@ export default class Filter extends Component {
 
     gotoIndex(index, event){
         const me = this;
+
         event.preventDefault();
         if(index > 0 && index <= me.state.typeOptions.length){
             me.props.store.dispatch(gotoIndex(me.state.type, index));
@@ -52,6 +56,7 @@ export default class Filter extends Component {
 
     onSelectionChange(event){
         const index = parseInt(event.target.value, 10);
+        //resizeSelect(event.target);
         this.gotoIndex(index, event);
     }
 
@@ -96,12 +101,22 @@ export default class Filter extends Component {
 
         return (
             <form onSubmit={me.handleSubmit.bind(me)}>
-            <fieldset>
-                <select onChange={me.onTypeChange.bind(me)} aria-label="Select type">{types}</select>
-                <select disabled={state.maxPage < 2} onChange={me.onSelectionChange.bind(me)} aria-label="Select page">{options}</select>
-            </fieldset>
+                <Select onChange={me.onTypeChange.bind(me)} aria-label="Select type">{types}</Select>
+                &nbsp;
+                <Select
+                    disabled={state.maxPage < 2}
+                    onChange={me.onSelectionChange.bind(me)}
+                    aria-label="Select page"
+                    dir="rtl"
+                >
+                    {options}
+                </Select>
             </form>
         )
+    }
+
+    componentDidUpdate(){
+        //console.log(arguments)
     }
 
     // prior to removal from the DOM

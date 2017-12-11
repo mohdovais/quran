@@ -19,7 +19,7 @@ function __$styleInject(css, returnValue) {
   return returnValue;
 }
 
-__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n    text-align: justify;\n}\n\narticle header {\n    text-align: center;\n    /*padding: 0 0 1em 0;*/\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em;\n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n.bismillah{\n    width: 240px;\n    height: 55px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.verse-count{\n    margin: 0 0.5em;\n    font-family: serif;\n}\n\n.verse-count span{\n    font-family: serif;\n}\n\n.verse-count svg{\n    height: 1.5em;\n    width: 1em;\n    vertical-align: middle;\n}\n\n.verse-count svg text{\n    direction: ltr;\n    fill: red;\n}\n\n.sajda {\n    color: red;\n}\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}\n\n.nav .text{\n    font-size: 0.8em;\n    padding: 0 1em;\n}\n", undefined);
+__$styleInject(":lang(ar) {\n    direction: rtl;\n    font-family: Amiri, serif;\n}\n\nbody{\n    padding-top: 42px;\n}\n\nselect{\n    font-size: 16px;\n    border: none;\n    -moz-appearance: none;\n    -webkit-appearance: none;\n    color: #007aff;\n    padding: 0 15px 0 0;\n    margin: 5px 0;\n    vertical-align: middle;\n    height: 22px;\n    min-width: 45px;\n    cursor: pointer;\n    background: transparent url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2012%2020%22%3E%3Cg%20fill%3D%22%23007aff%22%3E%3Cpath%20d%3D%22m%2012%2C6%20-1.2%2C1.2%20-4.8%2C-4.8%20-4.8%2C4.8%20L%20-1.95e-7%2C6%206%2C0%2012%2C6%20Z%22%20/%3E%3Cpath%20d%3D%22m%2012%2C14%20-1.2%2C-1.2%20-4.8%2C4.8%20-4.8%2C-4.8%20-1.2%2C1.2%206%2C6%20L%2012%2C14%20Z%22%20/%3E%3C/g%3E%3C/svg%3E') no-repeat 100% 50%;\n}\n\nselect::-ms-expand { display: none; }\n\nsection{\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\narticle {\n    line-height: 2.5em;\n    font-size: 1.5em;\n    padding: 1em;\n    text-align: justify;\n}\n\narticle header {\n    text-align: center;\n}\n\narticle header * {\n    line-height: 1;\n    padding: 0;\n    margin: 0;\n}\n\narticle header h2 {\n    font-size: 2em;\n}\n\narticle h2 img{\n    max-width: 100%;\n    max-height: 90px;\n}\n\narticle header h3 {\n    font-size: 0.7em;\n    color: #5C3219;\n    font-weight: 300;\n}\n\n.bismillah{\n    width: 240px;\n    height: 55px;\n    max-width: 100%;\n    margin-top: 1em;\n}\n\n.verse {\n    border-bottom: 1px dotted #5c1712;\n}\n\n.verse-count{\n    margin: 0 0.5em;\n    font-family: serif;\n}\n\n.verse-count span{\n    font-family: serif;\n}\n\n.verse-count svg{\n    height: 1.5em;\n    width: 1em;\n    vertical-align: middle;\n}\n\n.verse-count svg text{\n    direction: ltr;\n    fill: red;\n}\n\n.sajda {\n    color: red;\n}\n\n\nfooter {\n    text-align: center;\n    padding: 1em;\n}\n\n.nav{\n    text-align: center;\n}\n\n.nav:after{\n    content: '';\n    display: block;\n    clear: both;\n}\n\n.nav button{\n    background: none;\n    border: none;\n    color: #007aff;\n    padding: 5px 0;\n}\n\n.nav button:disabled{\n    opacity: 0;\n}\n\n.nav .text{\n    font-size: 0.8em;\n    padding: 0 1em;\n}\n\n.nav .next{\n    float: left;\n}\n.nav .prev{\n    float: right;\n}\n\n.nav button{\n    cursor: pointer;\n}\n\n.nav button svg{\n    margin: 0 0.25em;\n    vertical-align: middle;\n}\n\n.nav button span{\n    font-size: 16px;\n    line-height: 20px;\n    vertical-align: middle;\n}\n\nheader nav{\n    padding: 0.25em;\n\n    position: fixed;\n    top: 0;\n    width: 1200px;\n    max-width: 100%;\n\n    background-color: #FDF9F0;\n    border-bottom: 1px solid #5c3219;\n\n    -webkit-transform: translatez(0); /*360deg*/\n    -moz-transform: translatez(0);\n    -ms-transform: translatez(0);\n    -o-transform: translatez(0);\n    transform: translatez(0);\n}\n\n\n\n/* top navigation */\n", undefined);
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -1311,6 +1311,11 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
+var capitalize = function (_str) {
+    var str = String(_str);
+    return str.charAt(0).toUpperCase() + str.substring(1);
+};
+
 var TYPE_PAGE = 'page';
 var TYPE_SURA = 'sura';
 var ACTION_LOAD = 'LOAD';
@@ -1322,6 +1327,52 @@ var ACTION_PAGING_OPTIONS = 'PAGING_OPTIONS';
 var SURA_AR = 'سورة‎‎';
 var BISMILLAH_AR = '\xD8\xA8\xD9\x90\xD8\xB3\xD9\u2019\xD9\u2026\xD9\x90 \xD8\xA7\xD9\u201E\xD9\u201E\xD9\u017D\xD9\u2018\xD9\u2021\xD9\x90 \xD8\xA7\xD9\u201E\xD8\xB1\xD9\u017D\xD9\u2018\xD8\xAD\xD9\u2019\xD9\u2026\xD9\u017D\xD9\u2020\xD9\x90 \xD8\xA7\xD9\u201E\xD8\xB1\xD9\u017D\xD9\u2018\xD8\xAD\xD9\x90\xD9\u0160\xD9\u2026\xD9\x90';
 
+function observeStore(store, reducer, callback) {
+    var currentState = void 0;
+
+    function handleChange() {
+        var nextState = reducer(store, currentState);
+        if (nextState !== currentState) {
+            currentState = nextState;
+            callback(currentState);
+        }
+    }
+
+    var unsubscribe = store.subscribe(handleChange);
+    handleChange();
+    return unsubscribe;
+}
+
+var check = function check(object1, object2) {
+    var key;
+
+    for (key in object1) {
+        if (Object.prototype.hasOwnProperty.call(object1, key)) {
+            if (object1[key] !== object2[key]) {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+
+var objectEquals = function (object1, object2) {
+
+    // Short circuit if the same object is passed twice
+    if (object1 === object2) {
+        return true;
+    }
+    if (object1 && object2) {
+        // Do the second check because we could have extra keys in
+        // object2 that don't exist in object1.
+        return check(object1, object2) && check(object2, object1);
+    } else if (!object1 && !object2) {
+        return object1 === object2;
+    } else {
+        return false;
+    }
+};
+
 function gotoIndex(type, index) {
     return {
         type: ACTION_GOTO_INDEX,
@@ -1330,6 +1381,30 @@ function gotoIndex(type, index) {
             index: index
         }
     };
+}
+
+function getSelectWidth(text) {
+    var doc = document;
+    var body = doc.body;
+    var select = doc.createElement('select');
+    var option = doc.createElement('option');
+    var width;
+
+    option.text = text;
+    select.add(option, null);
+    select.style.opacity = 0;
+    body.appendChild(select);
+    width = select.scrollWidth;
+    body.removeChild(select);
+
+    return width;
+}
+
+function resizeSelect(select) {
+    var selected = select && select.options[select.selectedIndex];
+    if (selected) {
+        select.style.width = getSelectWidth(selected.innerText) + 'px';
+    }
 }
 
 var asyncGenerator = function () {
@@ -1515,6 +1590,52 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
+var Select = function (_Component) {
+    inherits(Select, _Component);
+
+    function Select() {
+        classCallCheck(this, Select);
+        return possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).apply(this, arguments));
+    }
+
+    createClass(Select, [{
+        key: 'updateWidth',
+        value: function updateWidth() {
+            var me = this;
+            window.requestAnimationFrame(function () {
+                //var node = me.getDOMNode();
+                var node = me.base;
+                if (node !== undefined) {
+                    setTimeout(resizeSelect, 100, node);
+                }
+            });
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.updateWidth();
+        }
+
+        // and or
+
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            this.updateWidth();
+        }
+    }, {
+        key: 'render',
+        value: function render$$1() {
+            return h(
+                'select',
+                this.props,
+                this.props.children
+            );
+        }
+    }]);
+    return Select;
+}(Component);
+
 var Filter = function (_Component) {
     inherits(Filter, _Component);
 
@@ -1568,6 +1689,7 @@ var Filter = function (_Component) {
         key: 'gotoIndex',
         value: function gotoIndex$$1(index, event) {
             var me = this;
+
             event.preventDefault();
             if (index > 0 && index <= me.state.typeOptions.length) {
                 me.props.store.dispatch(gotoIndex(me.state.type, index));
@@ -1577,6 +1699,7 @@ var Filter = function (_Component) {
         key: 'onSelectionChange',
         value: function onSelectionChange(event) {
             var index = parseInt(event.target.value, 10);
+            //resizeSelect(event.target);
             this.gotoIndex(index, event);
         }
     }, {
@@ -1627,21 +1750,28 @@ var Filter = function (_Component) {
                 'form',
                 { onSubmit: me.handleSubmit.bind(me) },
                 h(
-                    'fieldset',
-                    null,
-                    h(
-                        'select',
-                        { onChange: me.onTypeChange.bind(me), 'aria-label': 'Select type' },
-                        types
-                    ),
-                    h(
-                        'select',
-                        { disabled: state.maxPage < 2, onChange: me.onSelectionChange.bind(me), 'aria-label': 'Select page' },
-                        options$$1
-                    )
+                    Select,
+                    { onChange: me.onTypeChange.bind(me), 'aria-label': 'Select type' },
+                    types
+                ),
+                '\xA0',
+                h(
+                    Select,
+                    {
+                        disabled: state.maxPage < 2,
+                        onChange: me.onSelectionChange.bind(me),
+                        'aria-label': 'Select page',
+                        dir: 'rtl'
+                    },
+                    options$$1
                 )
             );
         }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {}
+        //console.log(arguments)
+
 
         // prior to removal from the DOM
 
@@ -1653,57 +1783,6 @@ var Filter = function (_Component) {
     }]);
     return Filter;
 }(Component);
-
-var capitalize = function (_str) {
-    var str = String(_str);
-    return str.charAt(0).toUpperCase() + str.substring(1);
-};
-
-function observeStore(store, reducer, callback) {
-    var currentState = void 0;
-
-    function handleChange() {
-        var nextState = reducer(store, currentState);
-        if (nextState !== currentState) {
-            currentState = nextState;
-            callback(currentState);
-        }
-    }
-
-    var unsubscribe = store.subscribe(handleChange);
-    handleChange();
-    return unsubscribe;
-}
-
-var check = function check(object1, object2) {
-    var key;
-
-    for (key in object1) {
-        if (Object.prototype.hasOwnProperty.call(object1, key)) {
-            if (object1[key] !== object2[key]) {
-                return false;
-            }
-        }
-    }
-    return true;
-};
-
-var objectEquals = function (object1, object2) {
-
-    // Short circuit if the same object is passed twice
-    if (object1 === object2) {
-        return true;
-    }
-    if (object1 && object2) {
-        // Do the second check because we could have extra keys in
-        // object2 that don't exist in object1.
-        return check(object1, object2) && check(object2, object1);
-    } else if (!object1 && !object2) {
-        return object1 === object2;
-    } else {
-        return false;
-    }
-};
 
 var _class = function (_Component) {
     inherits(_class, _Component);
@@ -1771,33 +1850,41 @@ var _class = function (_Component) {
                 return chapter ? '\u202B' + SURA_AR + ' ' + chapter.name + '\u202C' : '';
             }).join(', ');
 
+            //<span lang="ar">{chapters}</span>
+            //<div class="text">{capitalize(state.type)} {index} of {max} <div>{chapters}</div></div>
+
             return h(
                 'nav',
                 { 'class': 'nav' },
                 h(
-                    'span',
-                    { lang: 'ar' },
-                    chapters
+                    'button',
+                    { 'class': 'next', disabled: index >= max, onClick: me.next.bind(me) },
+                    h(
+                        'svg',
+                        { xmlns: 'http://www.w3.org/2000/svg', width: '12', height: '20', viewBox: '0 0 12 20' },
+                        h('path', { d: 'M10,0l2,2l-8,8l8,8l-2,2L0,10L10,0z', fill: '#007aff' })
+                    ),
+                    h(
+                        'span',
+                        null,
+                        'Next'
+                    )
                 ),
                 h(
                     'button',
                     { 'class': 'prev', disabled: index < 2, onClick: me.previous.bind(me) },
-                    '\u2329 Previous'
+                    h(
+                        'span',
+                        null,
+                        'Previous'
+                    ),
+                    h(
+                        'svg',
+                        { xmlns: 'http://www.w3.org/2000/svg', width: '12', height: '20', viewBox: '0 0 12 20' },
+                        h('path', { d: 'M 2,0 0,2 8,10 0,18 2,20 12,10 2,0 Z', fill: '#007aff' })
+                    )
                 ),
-                h(
-                    'span',
-                    { 'class': 'text' },
-                    capitalize(state.type),
-                    ' ',
-                    index,
-                    ' of ',
-                    max
-                ),
-                h(
-                    'button',
-                    { 'class': 'next', disabled: index >= max, onClick: me.next.bind(me) },
-                    'Next \u232A'
-                )
+                h(Filter, { store: me.props.store })
             );
         }
 
@@ -1824,12 +1911,11 @@ var Header = function (_Component) {
 
     createClass(Header, [{
         key: 'render',
-        value: function render$$1(props) {
+        value: function render$$1() {
             return h(
                 'header',
                 null,
-                h(Filter, { store: props.store }),
-                h(_class, { store: props.store })
+                h(_class, this.props)
             );
         }
     }]);
@@ -2233,6 +2319,27 @@ var Content = function (_Component) {
     return Content;
 }(Component);
 
+var Footer = function (_Component) {
+    inherits(Footer, _Component);
+
+    function Footer() {
+        classCallCheck(this, Footer);
+        return possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).apply(this, arguments));
+    }
+
+    createClass(Footer, [{
+        key: 'render',
+        value: function render$$1() {
+            return h(
+                'footer',
+                null,
+                h(_class, this.props)
+            );
+        }
+    }]);
+    return Footer;
+}(Component);
+
 var App = function (_Component) {
     inherits(App, _Component);
 
@@ -2250,7 +2357,7 @@ var App = function (_Component) {
                 { hidden: true },
                 h(Header, { store: store }),
                 h(Content, { store: store }),
-                h(_class, { store: store }),
+                h(Footer, { store: store }),
                 '\xA0'
             );
         }
@@ -2402,7 +2509,7 @@ function getSuraTypeOptions(suraList) {
         return !!page.name;
     }).map(function (page) {
         return {
-            text: page.name + ' ' + page.tname,
+            text: page.tname + ' ' + page.name,
             value: page.index
         };
     });
@@ -3369,11 +3476,14 @@ var registerServiceWorker = function (swjs, init) {
                 //registration.unregister()
                 //}
                 serviceWorker.register(swjs).then(function () {
+                    //console.log('then', sw)
                     //window.location.reload();
                     init();
                 }).catch(function () {
                     init();
                 });
+            }).catch(function () {
+                init();
             });
         });
     } else {
@@ -3510,7 +3620,6 @@ function mapSura(sura, index) {
 }
 
 function processQuranText(quranText) {
-
     var Sura = QuranData.Sura.map(mapSura, quranText.split('\r\n'));
 
     QuranData.Sajda.forEach(function (sajda) {
@@ -3541,6 +3650,40 @@ function processQuranText(quranText) {
     });
 }
 
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+
+// MIT license
+
+(function () {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = window.setTimeout(function () {
+            callback(currTime + timeToCall);
+        }, timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+    };
+
+    if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
+        clearTimeout(id);
+    };
+})();
+
+var requestAnimFrame = window.requestAnimationFrame;
+
+requestAnimFrame(function () {});
+
 if (!window.Promise) {
     window.Promise = promise;
 }
@@ -3556,7 +3699,7 @@ registerServiceWorker('service-worker.js', function init() {
         store.dispatch({
             type: ACTION_LOAD,
             data: {
-                quran: processQuranText(xhr.response)
+                quran: processQuranText(xhr.responseText)
             }
         });
 

@@ -13,11 +13,14 @@ export default function (swjs, init) {
                     //}
                     serviceWorker.register(swjs)
                     .then(function () {
+                        //console.log('then', sw)
                         //window.location.reload();
                         init();
                     }).catch(function(){
                         init();
                     });
+                }).catch(function(){
+                    init();
                 });
         });
     } else {

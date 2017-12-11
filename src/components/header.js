@@ -2,18 +2,15 @@ import {
     h,
     Component
 } from 'preact';
-import Filter from './filter';
 import NextBack from './next-back';
 
 export default class Header extends Component{
 
-    render(props){
+    render(){
         return (
             <header>
-                <Filter store={props.store} />
-                <NextBack store ={props.store} />
+                <NextBack {...this.props} />
             </header>
         );
     }
-
 }

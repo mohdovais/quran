@@ -3,6 +3,27 @@
     font-family: Amiri, serif;
 }
 
+body{
+    padding-top: 42px;
+}
+
+select{
+    font-size: 16px;
+    border: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    color: #007aff;
+    padding: 0 15px 0 0;
+    margin: 5px 0;
+    vertical-align: middle;
+    height: 22px;
+    min-width: 45px;
+    cursor: pointer;
+    background: transparent url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2012%2020%22%3E%3Cg%20fill%3D%22%23007aff%22%3E%3Cpath%20d%3D%22m%2012%2C6%20-1.2%2C1.2%20-4.8%2C-4.8%20-4.8%2C4.8%20L%20-1.95e-7%2C6%206%2C0%2012%2C6%20Z%22%20/%3E%3Cpath%20d%3D%22m%2012%2C14%20-1.2%2C-1.2%20-4.8%2C4.8%20-4.8%2C-4.8%20-1.2%2C1.2%206%2C6%20L%2012%2C14%20Z%22%20/%3E%3C/g%3E%3C/svg%3E') no-repeat 100% 50%;
+}
+
+select::-ms-expand { display: none; }
+
 section{
     max-width: 1200px;
     margin: 0 auto;
@@ -17,7 +38,6 @@ article {
 
 article header {
     text-align: center;
-    /*padding: 0 0 1em 0;*/
 }
 
 article header * {
@@ -82,7 +102,72 @@ footer {
     padding: 1em;
 }
 
+.nav{
+    text-align: center;
+}
+
+.nav:after{
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.nav button{
+    background: none;
+    border: none;
+    color: #007aff;
+    padding: 5px 0;
+}
+
+.nav button:disabled{
+    opacity: 0;
+}
+
 .nav .text{
     font-size: 0.8em;
     padding: 0 1em;
 }
+
+.nav .next{
+    float: left;
+}
+.nav .prev{
+    float: right;
+}
+
+.nav button{
+    cursor: pointer;
+}
+
+.nav button svg{
+    margin: 0 0.25em;
+    vertical-align: middle;
+}
+
+.nav button span{
+    font-size: 16px;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+header nav{
+    padding: 0.25em;
+
+    position: fixed;
+    top: 0;
+    width: 1200px;
+    max-width: 100%;
+
+    background-color: #FDF9F0;
+    border-bottom: 1px solid #5c3219;
+
+    -webkit-transform: translatez(0); /*360deg*/
+    -moz-transform: translatez(0);
+    -ms-transform: translatez(0);
+    -o-transform: translatez(0);
+    transform: translatez(0);
+}
+
+
+
+/* top navigation */

@@ -78,7 +78,6 @@ function mapSura(sura, index) {
 }
 
 export default function processQuranText(quranText) {
-
     const Sura = MetaData.Sura.map(mapSura, quranText.split('\r\n'));
 
     MetaData.Sajda.forEach(sajda => {

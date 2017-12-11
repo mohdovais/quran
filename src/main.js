@@ -15,10 +15,14 @@ import {
     ACTION_GOTO_INDEX
 } from './constants';
 import store from './reducers/store';
-import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './register-service-worker';
 import parseQuran from './web-worker/prepare';
 import observeStore from './reducers/observe-store';
 import objectEquals from './utils/object/equals';
+import requestAnimFrame from './polyfills/request-anim-frame';
+
+requestAnimFrame(function(){});
+
 
 if (!window.Promise) {
    window.Promise = FakePromise;
@@ -36,7 +40,7 @@ registerServiceWorker('service-worker.js', function init() {
         store.dispatch({
             type: ACTION_LOAD,
             data: {
-                quran: parseQuran(xhr.response)
+                quran: parseQuran(xhr.responseText)
             }
         });
 
