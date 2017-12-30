@@ -1,24 +1,6 @@
 (function () {
 'use strict';
 
-/*
-export default function (source, suraIndex) {
-    const hasSource = source.quran.length > 0;
-    var suraList, chapter;
-
-    if (hasSource) {
-        suraList = source.meta.suras.sura || [];
-        chapter = suraList[suraIndex - 1];
-        return chapter ? [Object.assign({}, chapter, {
-            ayas: source.quran.filter(function (aya) {
-                return aya.sura === suraIndex;
-            })
-        })] : [];
-    }
-
-    return [];
-}
-*/
 var getSura = function (quran, suraIndex) {
     var sura = quran.Sura || [];
     return [sura[suraIndex]] || [];
@@ -124,4 +106,3 @@ var onMessage = function (e) {
 self.onmessage = onMessage;
 
 }());
-//# sourceMappingURL=web-worker.js.map

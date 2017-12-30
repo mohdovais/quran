@@ -35,7 +35,7 @@ var onFetch = function (event) {
     );
 };
 
-self.CACHE_NAME = "1513023779809";
+self.CACHE_NAME = "1514671710024";
 
 self.urlsToCache = [
   'index.html',

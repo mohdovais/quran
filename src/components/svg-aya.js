@@ -10,7 +10,14 @@ export default class SvgAya extends Component{
         const id = guid();
 
         return (
-            <svg viewBox="0 0 1250 1625" role="img" aria-labelledby={id} class={props.className}>
+            <svg
+                viewBox="0 0 1250 1625"
+                role="img"
+                aria-labelledby={id}
+                class={props.className}
+                width="1em"
+                height="1.5em"
+            >
             <title id={id}>{props.desc}</title>
             <g stroke={strokeColor} stroke-width="30">
               <circle r="605" cx="633" cy="822" fill={fillColor}/>

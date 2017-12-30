@@ -31,18 +31,5 @@ fs.readFile('src/index.html', 'utf8', (err, data) => {
     }), 'utf8');
 });
 
-logBuild('app.js');
-exec('rollup -c rollup-config/app/dev.js');
-
-logBuild('app.min.js');
-exec('rollup -c rollup-config/app/prod.js');
-
-logBuild('web-worker.js');
-exec('rollup -c rollup-config/webworker/dev.js');
-
-logBuild('web-worker.min.js');
-exec('rollup -c rollup-config/webworker/prod.js');
-
-logBuild('service-worker.js');
-exec('rollup -c rollup-config/serviceworker/dev.js');
-console.log(`${FgYellowColor}======================================================${ResetColor}`);
+exec('rollup -c');
+exec('rollup -c --environment prod');
