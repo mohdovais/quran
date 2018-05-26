@@ -1,15 +1,19 @@
 export default function (event) {
-    var me = this;
     event.waitUntil(
-        me.caches.keys().then(function (cacheNames) {
+        self.caches.keys().then(function (cacheNames) {
             return Promise.all(
                 cacheNames.map(function (cacheName) {
-                    if (cacheName !== me.CACHE_NAME) {
-                        return me.caches.delete(cacheName);
+                    if (cacheName !== self.CACHE_NAME) {
+                        return self.caches.delete(cacheName);
                     }
                 })
             );
+        }).then(() => {
+            return self.skipWaiting();
+        })
+        .catch(error => {
+            console.log(error)
         })
     );
-    return me.clients.claim();
+    return self.clients.claim();
 }

@@ -1,16 +1,15 @@
-(function () {
 'use strict';
 
-var getSura = function (quran, suraIndex) {
+function getSura (quran, suraIndex) {
     var sura = quran.Sura || [];
     return [sura[suraIndex]] || [];
-};
+}
 
-var getObjectProperty = function (obj, property) {
+function getObjectProperty (obj, property) {
     return property.split('.').reduce(function (acc, prop) {
         return acc && acc[prop];
     }, obj);
-};
+}
 
 function getSuraAyas(Sura, start, end) {
     var i = start[0],
@@ -61,10 +60,9 @@ function getPage(Quran, i) {
 
 var TYPE_PAGE = 'page';
 var TYPE_SURA = 'sura';
-
 var ACTION_GOTO_INDEX = 'GOTO_INDEX';
 
-var getVerse = function (type, index, source) {
+function getVerse (type, index, source) {
     switch (type) {
         case TYPE_SURA:
             return getSura(source, index);
@@ -73,10 +71,11 @@ var getVerse = function (type, index, source) {
         default:
             return [];
     }
-};
+}
 
 //import prepare from './prepare';
-var onMessage = function (e) {
+
+function onMessage (e) {
     var worker = e.target,
         eData = e.data,
         message = eData.message,
@@ -101,8 +100,6 @@ var onMessage = function (e) {
         default:
             console.log(message);
     }
-};
+}
 
 self.onmessage = onMessage;
-
-}());

@@ -1,7 +1,7 @@
 import '../assets/styles/style.css';
 import './polyfills/object-assign';
 import './polyfills/array-find';
-import FakePromise from 'promise-polyfill';
+import 'promise-polyfill/src/polyfill';
 import ajax from './utils/ajax';
 import {
     h,
@@ -22,11 +22,6 @@ import objectEquals from './utils/object/equals';
 import requestAnimFrame from './polyfills/request-anim-frame';
 
 requestAnimFrame(function(){});
-
-
-if (!window.Promise) {
-   window.Promise = FakePromise;
-}
 
 
 const doc = document;

@@ -1,8 +1,0 @@
-index.html
-assets/scripts/app.min.js
-assets/scripts/web-worker.min.js
-assets/data/quran-simple.txt
-
-# Use from network if available
-NETWORK:
-*

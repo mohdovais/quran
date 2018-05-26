@@ -5,6 +5,7 @@
 
 body{
     padding-top: 42px;
+    font-size: 100%;
 }
 
 select{
@@ -32,6 +33,7 @@ section{
 article {
     line-height: 2.5em;
     font-size: 1.5em;
+    font-size: calc(120% + 1vw);
     padding: 1em;
     text-align: justify;
 }

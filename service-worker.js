@@ -1,28 +1,37 @@
 function onInstall (event) {
-    var me = this;
     event.waitUntil(
-        me.caches
-        .open(me.CACHE_NAME)
+        self.caches
+        .open(self.CACHE_NAME)
         .then(function (cache) {
-            return cache.addAll(me.urlsToCache);
+            return cache.addAll(self.urlsToCache);
+        })
+        .then(() => {
+            return self.skipWaiting();
+        })
+        .catch(error => {
+            console.log(error);
         })
     );
 }
 
 function onActivate (event) {
-    var me = this;
     event.waitUntil(
-        me.caches.keys().then(function (cacheNames) {
+        self.caches.keys().then(function (cacheNames) {
             return Promise.all(
                 cacheNames.map(function (cacheName) {
-                    if (cacheName !== me.CACHE_NAME) {
-                        return me.caches.delete(cacheName);
+                    if (cacheName !== self.CACHE_NAME) {
+                        return self.caches.delete(cacheName);
                     }
                 })
             );
+        }).then(() => {
+            return self.skipWaiting();
+        })
+        .catch(error => {
+            console.log(error);
         })
     );
-    return me.clients.claim();
+    return self.clients.claim();
 }
 
 function onFetch (event) {
@@ -35,20 +44,20 @@ function onFetch (event) {
     );
 }
 
-self.CACHE_NAME = "1527356640898";
+self.CACHE_NAME = "1527363285310";
 
 self.urlsToCache = [
   'index.html',
-  //'assets/scripts/app.min.js',
-  //'assets/scripts/web-worker.min.js',
+  'assets/scripts/app.min.js',
+  'assets/scripts/web-worker.js',
   'assets/data/quran-simple.txt'
 ];
 
 // INSTALL
-self.addEventListener('install', onInstall);
+self.addEventListener('install', onInstall.bind(self));
 
 // ACTIVATE
-self.addEventListener('activate', onActivate);
+self.addEventListener('activate', onActivate.bind(self));
 
 // FETCH
-self.addEventListener('fetch', onFetch);
+self.addEventListener('fetch', onFetch.bind(self));

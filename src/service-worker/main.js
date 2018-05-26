@@ -7,15 +7,15 @@ self.CACHE_NAME = "VERSION";
 self.urlsToCache = [
   'index.html',
   'assets/scripts/app.min.js',
-  'assets/scripts/web-worker.min.js',
+  'assets/scripts/web-worker.js',
   'assets/data/quran-simple.txt'
 ];
 
 // INSTALL
-self.addEventListener('install', onInstall);
+self.addEventListener('install', onInstall.bind(self));
 
 // ACTIVATE
-self.addEventListener('activate', onActivate);
+self.addEventListener('activate', onActivate.bind(self));
 
 // FETCH
-self.addEventListener('fetch', onFetch);
+self.addEventListener('fetch', onFetch.bind(self));

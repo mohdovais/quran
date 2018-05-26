@@ -1,10 +1,15 @@
 export default function (event) {
-    var me = this;
     event.waitUntil(
-        me.caches
-        .open(me.CACHE_NAME)
+        self.caches
+        .open(self.CACHE_NAME)
         .then(function (cache) {
-            return cache.addAll(me.urlsToCache);
+            return cache.addAll(self.urlsToCache);
+        })
+        .then(() => {
+            return self.skipWaiting();
+        })
+        .catch(error => {
+            console.log(error);
         })
     );
 }
