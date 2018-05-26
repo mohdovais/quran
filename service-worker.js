@@ -1,4 +1,4 @@
-var onInstall = function (event) {
+function onInstall (event) {
     var me = this;
     event.waitUntil(
         me.caches
@@ -7,9 +7,9 @@ var onInstall = function (event) {
             return cache.addAll(me.urlsToCache);
         })
     );
-};
+}
 
-var onActivate = function (event) {
+function onActivate (event) {
     var me = this;
     event.waitUntil(
         me.caches.keys().then(function (cacheNames) {
@@ -23,9 +23,9 @@ var onActivate = function (event) {
         })
     );
     return me.clients.claim();
-};
+}
 
-var onFetch = function (event) {
+function onFetch (event) {
     var me = this;
     event.respondWith(
         me.caches.match(event.request)
@@ -33,14 +33,14 @@ var onFetch = function (event) {
             return response || me.fetch(event.request);
         })
     );
-};
+}
 
-self.CACHE_NAME = "1514671710024";
+self.CACHE_NAME = "1527356640898";
 
 self.urlsToCache = [
   'index.html',
-  'assets/scripts/app.min.js',
-  'assets/scripts/web-worker.min.js',
+  //'assets/scripts/app.min.js',
+  //'assets/scripts/web-worker.min.js',
   'assets/data/quran-simple.txt'
 ];
 
