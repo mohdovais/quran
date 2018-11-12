@@ -1,5 +1,5 @@
 // rollup.config.js
-import uglify from 'rollup-plugin-uglify';
+import {uglify} from 'rollup-plugin-uglify';
 import config from './app.dev';
 
 export default Object.assign({}, config, {

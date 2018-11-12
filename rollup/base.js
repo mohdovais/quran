@@ -15,12 +15,12 @@ export default {
             exclude: 'node_modules/**',
             babelrc: false,
             presets: [
-                ["env", {
+                ["@babel/env", {
                     "modules": false
                 }]
             ],
             plugins: [
-                "external-helpers", ["transform-react-jsx", {
+                ["@babel/transform-react-jsx", {
                     "pragma": "h"
                 }]
             ]

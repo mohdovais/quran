@@ -44,7 +44,7 @@ function onFetch (event) {
     );
 }
 
-self.CACHE_NAME = "1527363285310";
+self.CACHE_NAME = "1541965245392";
 
 self.urlsToCache = [
   'index.html',
